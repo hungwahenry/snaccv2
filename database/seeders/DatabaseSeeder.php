@@ -15,6 +15,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Seed universities first
+        $this->call([
+            UniversitySeeder::class,
+        ]);
+
         // User::factory(10)->create();
 
         User::factory()->create([

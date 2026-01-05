@@ -29,7 +29,7 @@ class OtpMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your SNACC Login Code',
+            subject: 'your magic code ✨',
         );
     }
 

@@ -1,26 +1,17 @@
 @extends('emails.layout')
 
-@section('title', 'Your SNACC Login Code')
+@section('title', 'your magic code ✨')
 
 @section('content')
-    <h2 style="color: #111827; margin-top: 0;">Your Login Code</h2>
-
-    <p>Hello!</p>
-
-    <p>You requested to sign in to SNACC. Use the code below to complete your login:</p>
+    <p style="font-size: 24px; font-weight: 600; color: #111827; margin-bottom: 24px; text-align: center;">heyyy! here's your magic code ✨</p>
 
     <div class="otp-code">
         {{ $otp }}
     </div>
 
-    <div class="info-box">
-        <strong>Important:</strong> This code will expire in 10 minutes and can only be used once.
-    </div>
+    <p class="info-text">expires in 10 minutes • single use only</p>
 
-    <p>If you didn't request this code, you can safely ignore this email.</p>
-
-    <p>
-        Thanks,<br>
-        The SNACC Team
+    <p style="text-align: center; color: #9ca3af; font-size: 14px; margin-top: 32px;">
+        didn't request this? just ignore this email.
     </p>
 @endsection

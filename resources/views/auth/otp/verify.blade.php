@@ -1,66 +1,39 @@
 <x-guest-layout>
-    <div class="mb-6 text-center">
-        <h2 class="text-2xl font-bold text-gray-900">Enter Code</h2>
-        <p class="mt-2 text-sm text-gray-600">
-            We sent a 6-digit code to<br>
-            <span class="font-medium text-gray-900">{{ session('otp_email') }}</span>
+    <div class="mb-8">
+        <h1 class="font-bold text-5xl sm:text-6xl text-gray-900 dark:text-white leading-tight lowercase mb-4">
+            enter code
+        </h1>
+        <p class="text-base text-gray-600 dark:text-gray-400 lowercase">
+            sent to {{ session('otp_email') }}
         </p>
     </div>
 
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form method="POST" action="{{ route('auth.verify') }}">
+    <form method="POST" action="{{ route('auth.verify') }}" class="space-y-8">
         @csrf
 
         <div>
-            <x-input-label for="otp" :value="__('Verification Code')" />
-            <x-text-input
-                id="otp"
-                class="block mt-1 w-full text-center text-2xl tracking-widest font-mono"
-                type="text"
-                name="otp"
-                required
-                autofocus
-                maxlength="6"
-                pattern="[0-9]{6}"
-                placeholder="000000"
-                autocomplete="one-time-code"
-            />
-            <x-input-error :messages="$errors->get('otp')" class="mt-2" />
+            <x-otp-input name="otp" />
+            <x-input-error :messages="$errors->get('otp')" />
         </div>
 
-        <div class="mt-6">
-            <x-primary-button class="w-full justify-center">
-                {{ __('Verify') }}
-            </x-primary-button>
-        </div>
+        <x-primary-button>
+            <span class="lowercase">verify</span>
+            <x-solar-arrow-right-linear class="w-5 h-5 ml-2" />
+        </x-primary-button>
     </form>
 
-    <div class="mt-4 text-center">
-        <form method="POST" action="{{ route('auth.resend') }}">
+    <div class="mt-8 flex items-center justify-center gap-6 text-sm">
+        <form method="POST" action="{{ route('auth.resend') }}" class="inline">
             @csrf
-            <button type="submit" class="text-sm text-indigo-600 hover:text-indigo-500">
-                {{ __('Didn\'t receive the code? Resend') }}
+            <button type="submit" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors lowercase font-medium">
+                resend code
             </button>
         </form>
-    </div>
 
-    <div class="mt-2 text-center">
-        <a href="{{ route('auth') }}" class="text-sm text-gray-600 hover:text-gray-900">
-            {{ __('Use a different email') }}
+        <span class="text-gray-300 dark:text-gray-700">•</span>
+
+        <a href="{{ route('auth') }}" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors lowercase font-medium">
+            change email
         </a>
     </div>
-
-    <script>
-        // Auto-submit when 6 digits are entered
-        document.getElementById('otp').addEventListener('input', function(e) {
-            // Remove non-numeric characters
-            this.value = this.value.replace(/[^0-9]/g, '');
-
-            // Auto-submit when 6 digits entered
-            if (this.value.length === 6) {
-                this.form.submit();
-            }
-        });
-    </script>
 </x-guest-layout>

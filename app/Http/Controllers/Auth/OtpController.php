@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\SendOtpRequest;
+use App\Http\Requests\Auth\VerifyOtpRequest;
 use App\Mail\OtpMail;
 use App\Models\User;
 use App\Services\OtpService;
@@ -29,25 +31,9 @@ class OtpController extends Controller
         return view('auth.otp.request');
     }
 
-    public function sendOtp(Request $request): RedirectResponse
+    public function sendOtp(SendOtpRequest $request): RedirectResponse
     {
-        $request->validate([
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
-        ]);
-
-        $key = 'send-otp:' . $request->ip();
-
-        if (RateLimiter::tooManyAttempts($key, 3)) {
-            $seconds = RateLimiter::availableIn($key);
-
-            throw ValidationException::withMessages([
-                'email' => "Too many OTP requests. Please try again in {$seconds} seconds.",
-            ]);
-        }
-
-        RateLimiter::hit($key, 60);
-
-        $email = $request->email;
+        $email = $request->validated()['email'];
 
         // Generate OTP
         $otp = $this->otpService->generate($email);
@@ -71,35 +57,25 @@ class OtpController extends Controller
         return view('auth.otp.verify');
     }
 
-    public function verifyOtp(Request $request): RedirectResponse
+    public function verifyOtp(VerifyOtpRequest $request): RedirectResponse
     {
-        $request->validate([
-            'otp' => ['required', 'string', 'size:6'],
-        ]);
-
         $email = session('otp_email');
 
         if (!$email) {
             return redirect()->route('auth')->with('error', 'Session expired. Please request a new OTP.');
         }
 
-        $key = 'verify-otp:' . $request->ip();
+        $otp = $request->validated()['otp'];
 
-        if (RateLimiter::tooManyAttempts($key, 5)) {
-            throw ValidationException::withMessages([
-                'otp' => 'Too many failed attempts. Please request a new OTP.',
-            ]);
-        }
-
-        if (!$this->otpService->verify($email, $request->otp)) {
-            RateLimiter::hit($key, 300);
+        if (!$this->otpService->verify($email, $otp)) {
+            $request->recordFailedAttempt();
 
             throw ValidationException::withMessages([
                 'otp' => 'Invalid or expired OTP code.',
             ]);
         }
 
-        RateLimiter::clear($key);
+        $request->clearAttempts();
 
         // Check if user exists
         $user = User::where('email', $email)->first();

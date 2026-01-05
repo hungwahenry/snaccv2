@@ -50,7 +50,8 @@ class Snacc extends Model
 
     public function vibetags(): BelongsToMany
     {
-        return $this->belongsToMany(Vibetag::class, 'snacc_vibetag');
+        return $this->belongsToMany(Vibetag::class, 'snacc_vibetag')
+            ->withTimestamps();
     }
 
     public function quotedSnacc(): BelongsTo

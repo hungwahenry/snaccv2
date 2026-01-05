@@ -15,7 +15,8 @@ class Vibetag extends Model
 
     public function snaccs(): BelongsToMany
     {
-        return $this->belongsToMany(Snacc::class, 'snacc_vibetag');
+        return $this->belongsToMany(Snacc::class, 'snacc_vibetag')
+            ->withTimestamps();
     }
 
     public static function findOrCreateFromString(string $tag): self

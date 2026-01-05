@@ -31,7 +31,7 @@
             <x-input-error :messages="$errors->get('email')" />
         </div>
 
-        <x-primary-button>
+        <x-primary-button loading-text="sending code">
             <span class="lowercase">continue</span>
             <x-solar-arrow-right-linear class="w-5 h-5 ml-2" />
         </x-primary-button>

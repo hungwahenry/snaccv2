@@ -24,9 +24,6 @@ class StoreProfileRequest extends FormRequest
         return [
             'university_id' => ['required', 'exists:universities,id'],
             'username' => ['required', 'string', 'lowercase', 'min:3', 'max:30', 'alpha_dash', 'unique:profiles,username', 'regex:/^[a-z0-9_]+$/'],
-            'graduation_year' => ['required', 'integer', 'min:' . date('Y'), 'max:' . (date('Y') + 10)],
-            'gender' => ['required', 'in:male,female,other,prefer_not_to_say'],
-            'bio' => ['nullable', 'string', 'max:500'],
             'profile_photo' => ['nullable', 'image', 'max:2048', 'mimes:jpg,jpeg,png'],
         ];
     }

@@ -13,7 +13,7 @@ class OnboardingController extends Controller
     public function show(): View|RedirectResponse
     {
         if (auth()->user()->profile) {
-            return redirect()->route('dashboard');
+            return redirect()->route('home');
         }
 
         $universities = University::orderBy('name')->get();
@@ -33,6 +33,6 @@ class OnboardingController extends Controller
 
         Profile::create($validated);
 
-        return redirect()->route('dashboard')->with('status', 'Welcome to SNACC! Your profile has been created.');
+        return redirect()->route('home')->with('status', 'Welcome to SNACC! Your profile has been created.');
     }
 }

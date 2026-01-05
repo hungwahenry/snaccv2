@@ -97,12 +97,12 @@ class OtpController extends Controller
         $request->session()->regenerate();
         $request->session()->forget('otp_email');
 
-        // Redirect to onboarding if new user, otherwise dashboard
+        // Redirect to onboarding if new user, otherwise home
         if ($isNewUser) {
             return redirect()->route('onboarding');
         }
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended(route('home', absolute: false));
     }
 
     public function resendOtp(Request $request): RedirectResponse

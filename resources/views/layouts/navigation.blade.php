@@ -6,25 +6,37 @@
         </a>
 
         <!-- Home -->
-        <a href="{{ route('home') }}" class="flex flex-col items-center justify-center flex-1 lg:flex-initial lg:w-12 lg:h-12 {{ request()->routeIs('home') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors">
+        <a href="{{ route('home') }}" class="flex items-center justify-center lg:w-12 lg:h-12 {{ request()->routeIs('home') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors">
             @if(request()->routeIs('home'))
                 <x-solar-home-2-bold class="w-6 h-6" />
             @else
                 <x-solar-home-2-linear class="w-6 h-6" />
             @endif
-            <span class="text-xs mt-1 lowercase lg:hidden">home</span>
         </a>
 
         <!-- Explore -->
-        <a href="#" class="flex flex-col items-center justify-center flex-1 lg:flex-initial lg:w-12 lg:h-12 text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors">
+        <a href="#" class="flex items-center justify-center lg:w-12 lg:h-12 text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors">
             <x-solar-compass-linear class="w-6 h-6" />
-            <span class="text-xs mt-1 lowercase lg:hidden">explore</span>
+        </a>
+
+        <!-- Create Post -->
+        <a href="#" class="flex items-center justify-center w-12 h-12 lg:w-12 lg:h-12 bg-primary-500 hover:bg-primary-600 text-white rounded-full transition-all">
+            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+        </a>
+
+        <!-- Notifications -->
+        <a href="#" class="flex items-center justify-center lg:w-12 lg:h-12 text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors relative">
+            <x-solar-bell-linear class="w-6 h-6" />
+            <!-- Notification badge (future use) -->
+            <span class="absolute top-0 right-0 lg:top-1 lg:right-1 w-2 h-2 bg-primary-500 rounded-full"></span>
         </a>
 
         <!-- Profile -->
-        <a href="{{ route('profile.edit') }}" class="flex flex-col items-center justify-center flex-1 lg:flex-initial lg:w-12 lg:h-12 {{ request()->routeIs('profile.*') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors">
+        <a href="{{ route('profile.edit') }}" class="flex items-center justify-center lg:w-12 lg:h-12 {{ request()->routeIs('profile.*') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors">
             @if(auth()->user()->profile?->profile_photo)
-                <img src="{{ Storage::url(auth()->user()->profile->profile_photo) }}" alt="Profile" class="w-6 h-6 rounded-full object-cover" />
+                <img src="{{ Storage::url(auth()->user()->profile->profile_photo) }}" alt="Profile" class="w-7 h-7 rounded-full object-cover border-2 {{ request()->routeIs('profile.*') ? 'border-primary-500' : 'border-transparent' }}" />
             @else
                 @if(request()->routeIs('profile.*'))
                     <x-solar-user-circle-bold class="w-6 h-6" />
@@ -32,7 +44,6 @@
                     <x-solar-user-circle-linear class="w-6 h-6" />
                 @endif
             @endif
-            <span class="text-xs mt-1 lowercase lg:hidden">profile</span>
         </a>
 
         <!-- Logout - Desktop Only, at bottom -->

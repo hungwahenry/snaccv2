@@ -27,7 +27,7 @@ export default () => ({
     },
 
     get vibetags() {
-        const matches = this.content.match(/#(\w+)/g);
+        const matches = this.content.match(/~(\w+)/g);
         return matches ? [...new Set(matches)] : [];
     },
 

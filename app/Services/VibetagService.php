@@ -13,7 +13,7 @@ class VibetagService
      */
     public function extractFromContent(string $content): array
     {
-        preg_match_all('/#(\w+)/', $content, $matches);
+        preg_match_all('/~(\w+)/', $content, $matches);
         return array_unique($matches[1]);
     }
 

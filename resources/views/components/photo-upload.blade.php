@@ -39,24 +39,3 @@
         <p class="text-sm text-gray-600 dark:text-gray-400 lowercase" x-text="fileName"></p>
     </div>
 </div>
-
-<script>
-function photoUpload() {
-    return {
-        preview: null,
-        fileName: '',
-
-        handleFileChange(event) {
-            const file = event.target.files[0];
-            if (file) {
-                this.fileName = file.name;
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    this.preview = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-    }
-}
-</script>

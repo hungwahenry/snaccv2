@@ -20,11 +20,16 @@
         </a>
 
         <!-- Create Post -->
-        <a href="#" class="flex items-center justify-center w-12 h-12 lg:w-12 lg:h-12 bg-primary-500 hover:bg-primary-600 text-white rounded-full transition-all">
+        <button
+            type="button"
+            x-data=""
+            @click="$dispatch('open-modal', 'create-snacc')"
+            class="flex items-center justify-center w-12 h-12 lg:w-12 lg:h-12 bg-primary-500 hover:bg-primary-600 text-white rounded-full transition-all"
+        >
             <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
-        </a>
+        </button>
 
         <!-- Notifications -->
         <a href="#" class="flex items-center justify-center lg:w-12 lg:h-12 text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors relative">

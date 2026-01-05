@@ -23,6 +23,12 @@
             <main class="pb-16 lg:pb-0 lg:pl-20">
                 {{ $slot }}
             </main>
+
+            <!-- Create Snacc Modal -->
+            <x-posts.create.modal />
+
+            <!-- GIF Picker Modal -->
+            <x-gif-picker.modal />
         </div>
     </body>
 </html>

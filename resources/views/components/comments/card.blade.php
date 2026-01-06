@@ -2,41 +2,99 @@
 
 <article class="border-b border-gray-200 dark:border-dark-border"
          x-data="{
-             replies: {{ Js::from($comment->replies ?? []) }},
+             replies: [],
              repliesCount: {{ $comment->replies_count ?? 0 }},
              showReplies: false,
              loadingReplies: false,
-             repliesPage: 2,
-             hasMoreReplies: {{ $comment->replies_count > 3 ? 'true' : 'false' }},
+             repliesPage: 1,
+             hasMoreReplies: {{ $comment->replies_count > 0 ? 'true' : 'false' }},
+             repliesLoaded: false,
+             async toggleReplies() {
+                 console.log('💭 [TOGGLE REPLIES] Toggling for comment {{ $comment->id }}', {
+                     showReplies: this.showReplies,
+                     repliesLoaded: this.repliesLoaded,
+                     repliesCount: this.repliesCount
+                 });
+
+                 if (!this.showReplies) {
+                     this.showReplies = true;
+
+                     // Load replies on first expand if not already loaded
+                     if (!this.repliesLoaded && this.repliesCount > 0) {
+                         console.log('💭 [TOGGLE REPLIES] Loading replies for first time');
+                         await this.loadMoreReplies();
+                         this.repliesLoaded = true;
+                     }
+                 } else {
+                     console.log('💭 [TOGGLE REPLIES] Hiding replies');
+                     this.showReplies = false;
+                 }
+             },
              async loadMoreReplies() {
-                 if (this.loadingReplies) return;
+                 console.log('💭 [LOAD MORE REPLIES] Starting for comment {{ $comment->id }}', {
+                     loadingReplies: this.loadingReplies,
+                     repliesPage: this.repliesPage,
+                     currentRepliesCount: this.replies.length
+                 });
+
+                 if (this.loadingReplies) {
+                     console.warn('💭 [LOAD MORE REPLIES] Already loading, skipping');
+                     return;
+                 }
 
                  this.loadingReplies = true;
+                 const url = '/comments/{{ $comment->id }}/replies?page=' + this.repliesPage;
+                 console.log('💭 [LOAD MORE REPLIES] Fetching:', url);
+
                  try {
-                     const response = await fetch('/comments/{{ $comment->id }}/replies?page=' + this.repliesPage, {
+                     const response = await fetch(url, {
                          headers: {
                              'Accept': 'application/json'
                          }
                      });
+
+                     console.log('💭 [LOAD MORE REPLIES] Response status:', response.status);
                      const data = await response.json();
+                     console.log('💭 [LOAD MORE REPLIES] Response data:', data);
 
                      if (data.success) {
+                         console.log('💭 [LOAD MORE REPLIES] Adding replies:', {
+                             newReplies: data.replies.length,
+                             currentTotal: this.replies.length
+                         });
                          this.replies.push(...data.replies);
                          this.hasMoreReplies = data.has_more;
                          this.repliesPage = data.next_page;
+                         console.log('💭 [LOAD MORE REPLIES] State updated:', {
+                             totalReplies: this.replies.length,
+                             hasMoreReplies: this.hasMoreReplies,
+                             nextPage: this.repliesPage
+                         });
                      }
                  } catch (error) {
-                     console.error('Error loading more replies:', error);
+                     console.error('💭 [LOAD MORE REPLIES] ERROR:', error);
                  } finally {
                      this.loadingReplies = false;
                  }
              }
          }"
          @comment-posted.window="
+             console.log('💭 [NEW REPLY EVENT] Received for comment {{ $comment->id }}', {
+                 eventCommentId: $event.detail.comment.id,
+                 parentCommentId: $event.detail.comment.parent_comment_id,
+                 thisCommentId: {{ $comment->id }},
+                 matches: $event.detail.comment.parent_comment_id == {{ $comment->id }}
+             });
              if ($event.detail.comment.parent_comment_id == {{ $comment->id }}) {
+                 console.log('💭 [NEW REPLY EVENT] Adding reply to this comment');
                  replies.push($event.detail.comment);
                  repliesCount++;
                  showReplies = true;
+                 repliesLoaded = true;
+                 console.log('💭 [NEW REPLY EVENT] Reply added', {
+                     totalReplies: replies.length,
+                     repliesCount: repliesCount
+                 });
              }
          "
 >
@@ -91,11 +149,13 @@
                 <!-- View Replies Button (collapsed state) -->
                 <div x-show="repliesCount > 0 && !showReplies" class="mt-3">
                     <button
-                        @click="showReplies = true"
+                        @click="toggleReplies()"
+                        :disabled="loadingReplies"
                         type="button"
-                        class="text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 lowercase font-medium"
+                        class="text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 lowercase font-medium disabled:opacity-50"
                     >
-                        <span x-text="'view ' + repliesCount + ' ' + (repliesCount === 1 ? 'reply' : 'replies')"></span>
+                        <span x-show="!loadingReplies" x-text="'view ' + repliesCount + ' ' + (repliesCount === 1 ? 'reply' : 'replies')"></span>
+                        <span x-show="loadingReplies">loading...</span>
                     </button>
                 </div>
 
@@ -122,7 +182,7 @@
 
                     <!-- Hide Replies Button -->
                     <button
-                        @click="showReplies = false"
+                        @click="toggleReplies()"
                         type="button"
                         class="mt-2 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 lowercase"
                     >

@@ -35,11 +35,20 @@
                     $refs.commentInput.style.height = 'auto';
                 },
                 async postComment() {
+                    console.log('💬 [POST COMMENT] Starting', {
+                        hasContent: this.content.trim() !== '',
+                        hasGif: this.gifUrl !== '',
+                        isReply: this.parentCommentId !== null,
+                        parentCommentId: this.parentCommentId
+                    });
+
                     if (this.content.trim() === '' && this.gifUrl === '') {
+                        console.warn('💬 [POST COMMENT] Empty content, skipping');
                         return;
                     }
 
                     if (this.submitting) {
+                        console.warn('💬 [POST COMMENT] Already submitting, skipping');
                         return;
                     }
 
@@ -52,8 +61,13 @@
                         replied_to_user_id: this.repliedToUserId,
                     };
 
+                    console.log('💬 [POST COMMENT] Form data:', formData);
+
                     try {
-                        const response = await fetch('{{ route('comments.store', $snacc) }}', {
+                        const url = '{{ route('comments.store', $snacc) }}';
+                        console.log('💬 [POST COMMENT] Posting to:', url);
+
+                        const response = await fetch(url, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -63,9 +77,17 @@
                             body: JSON.stringify(formData),
                         });
 
+                        console.log('💬 [POST COMMENT] Response status:', response.status);
                         const data = await response.json();
+                        console.log('💬 [POST COMMENT] Response data:', data);
 
                         if (data.success) {
+                            console.log('💬 [POST COMMENT] Success! Dispatching event', {
+                                commentId: data.comment.id,
+                                parentCommentId: data.comment.parent_comment_id,
+                                isReply: data.comment.parent_comment_id !== null
+                            });
+
                             // Dispatch event to add comment to list
                             window.dispatchEvent(new CustomEvent('comment-posted', {
                                 detail: { comment: data.comment }
@@ -74,10 +96,10 @@
                             // Reset form
                             this.resetForm();
                         } else {
-                            console.error('Failed to post comment:', data.message);
+                            console.error('💬 [POST COMMENT] Failed:', data.message);
                         }
                     } catch (error) {
-                        console.error('Error posting comment:', error);
+                        console.error('💬 [POST COMMENT] ERROR:', error);
                     } finally {
                         this.submitting = false;
                     }

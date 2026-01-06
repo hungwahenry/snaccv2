@@ -3,28 +3,60 @@
          x-data="{
              comments: {{ Js::from($comments->items()) }},
              hasMorePages: {{ $comments->hasMorePages() ? 'true' : 'false' }},
-             nextPageUrl: '{{ $comments->nextPageUrl() }}',
+             currentPage: {{ $comments->currentPage() }},
              emptyState: {{ $comments->isEmpty() ? 'true' : 'false' }},
              loadingMore: false,
              async loadMoreComments() {
-                 if (this.loadingMore || !this.hasMorePages) return;
+                 const nextPage = this.currentPage + 1;
+                 const url = '{{ route('comments.index', $snacc) }}?page=' + nextPage;
+
+                 console.log('📋 [LOAD MORE COMMENTS] Button clicked', {
+                     loadingMore: this.loadingMore,
+                     hasMorePages: this.hasMorePages,
+                     currentPage: this.currentPage,
+                     nextPage: nextPage,
+                     url: url
+                 });
+
+                 if (this.loadingMore || !this.hasMorePages) {
+                     console.warn('📋 [LOAD MORE COMMENTS] Blocked:', {
+                         loadingMore: this.loadingMore,
+                         hasMorePages: this.hasMorePages
+                     });
+                     return;
+                 }
 
                  this.loadingMore = true;
+                 console.log('📋 [LOAD MORE COMMENTS] Fetching:', url);
+
                  try {
-                     const response = await fetch(this.nextPageUrl, {
+                     const response = await fetch(url, {
                          headers: {
                              'Accept': 'application/json'
                          }
                      });
+
+                     console.log('📋 [LOAD MORE COMMENTS] Response status:', response.status);
                      const data = await response.json();
+                     console.log('📋 [LOAD MORE COMMENTS] Response data:', data);
 
                      if (data.success) {
+                         console.log('📋 [LOAD MORE COMMENTS] Adding comments:', {
+                             newComments: data.comments.length,
+                             currentTotal: this.comments.length
+                         });
                          this.comments.push(...data.comments);
                          this.hasMorePages = data.has_more;
-                         this.nextPageUrl = data.next_page_url;
+                         this.currentPage = nextPage;
+
+                         console.log('📋 [LOAD MORE COMMENTS] State updated:', {
+                             totalComments: this.comments.length,
+                             hasMorePages: this.hasMorePages,
+                             currentPage: this.currentPage
+                         });
                      }
                  } catch (error) {
-                     console.error('Error loading more comments:', error);
+                     console.error('📋 [LOAD MORE COMMENTS] ERROR:', error);
                  } finally {
                      this.loadingMore = false;
                  }

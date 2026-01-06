@@ -6,19 +6,30 @@ use App\Http\Requests\StoreCommentRequest;
 use App\Models\Comment;
 use App\Models\Snacc;
 use App\Services\CommentService;
+use App\Traits\RendersCommentHtml;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CommentController extends Controller
 {
+    use RendersCommentHtml;
+
     public function __construct(
         protected CommentService $commentService
     ) {}
 
     public function store(StoreCommentRequest $request, Snacc $snacc): JsonResponse|RedirectResponse
     {
+        Log::info('💬 [COMMENT STORE] Request received', [
+            'snacc_id' => $snacc->id,
+            'user_id' => auth()->id(),
+            'is_json' => $request->wantsJson(),
+        ]);
+
         $validated = $request->validated();
+        Log::info('💬 [COMMENT STORE] Validated data', $validated);
 
         $comment = $this->commentService->createComment(
             snaccId: $snacc->id,
@@ -29,16 +40,15 @@ class CommentController extends Controller
             repliedToUserId: $validated['replied_to_user_id'] ?? null
         );
 
-        // Load relationships for JSON response
-        $comment->load([
-            'user.profile',
-            'repliedToUser.profile',
-            'replies' => function($query) {
-                $query->with(['user.profile', 'repliedToUser.profile'])
-                      ->orderBy('created_at', 'asc')
-                      ->limit(3);
-            }
+        Log::info('💬 [COMMENT STORE] Comment created', [
+            'comment_id' => $comment->id,
+            'parent_comment_id' => $comment->parent_comment_id,
+            'is_reply' => $comment->parent_comment_id !== null,
         ]);
+
+        // Load relationships for JSON response
+        $comment->load(['user.profile', 'repliedToUser.profile'])
+                ->loadCount('replies');
 
         if ($request->wantsJson()) {
             // Determine the correct view based on whether this is a reply or top-level comment
@@ -46,12 +56,24 @@ class CommentController extends Controller
                 ? 'components.comments.reply'
                 : 'components.comments.card';
 
-            return response()->json([
+            Log::info('💬 [COMMENT STORE] Rendering view', [
+                'view' => $viewName,
+                'comment_id' => $comment->id,
+            ]);
+
+            $response = [
                 'success' => true,
                 'comment' => array_merge($comment->toArray(), [
                     'html' => view($viewName, ['comment' => $comment])->render()
                 ]),
+            ];
+
+            Log::info('💬 [COMMENT STORE] JSON response prepared', [
+                'comment_id' => $comment->id,
+                'has_html' => isset($response['comment']['html']),
             ]);
+
+            return response()->json($response);
         }
 
         return redirect()->route('snaccs.show', $snacc)->with('success', 'Comment posted!');
@@ -59,47 +81,72 @@ class CommentController extends Controller
 
     public function index(Request $request, Snacc $snacc): JsonResponse
     {
-        $page = $request->get('page', 1);
+        Log::info('📋 [COMMENTS INDEX] Load more comments requested', [
+            'snacc_id' => $snacc->id,
+            'page' => $request->get('page', 1),
+        ]);
+
         $comments = $this->commentService->getCommentsForSnacc($snacc, 10);
 
-        // Transform comments to include HTML
-        $comments->getCollection()->transform(function ($comment) {
-            if ($comment->replies) {
-                $comment->replies->transform(function ($reply) {
-                    $reply->html = view('components.comments.reply', ['comment' => $reply])->render();
-                    return $reply;
-                });
-            }
+        Log::info('📋 [COMMENTS INDEX] Comments fetched from DB', [
+            'count' => $comments->count(),
+            'total' => $comments->total(),
+            'current_page' => $comments->currentPage(),
+            'has_more' => $comments->hasMorePages(),
+        ]);
 
-            $comment->html = view('components.comments.card', ['comment' => $comment])->render();
-            return $comment;
-        });
+        // Transform comments to include HTML (no replies to transform)
+        $comments = $this->transformCommentsWithHtml($comments, includeReplies: false);
 
-        return response()->json([
+        $response = [
             'success' => true,
             'comments' => $comments->items(),
             'has_more' => $comments->hasMorePages(),
             'next_page_url' => $comments->nextPageUrl(),
+        ];
+
+        Log::info('📋 [COMMENTS INDEX] Response prepared', [
+            'comments_count' => count($response['comments']),
+            'has_more' => $response['has_more'],
+            'next_page_url' => $response['next_page_url'],
         ]);
+
+        return response()->json($response);
     }
 
     public function replies(Request $request, Comment $comment): JsonResponse
     {
-        $page = $request->get('page', 1);
+        Log::info('💭 [REPLIES INDEX] Load replies requested', [
+            'comment_id' => $comment->id,
+            'page' => $request->get('page', 1),
+        ]);
+
         $replies = $this->commentService->getRepliesForComment($comment, 10);
 
-        // Transform replies to include HTML
-        $replies->getCollection()->transform(function ($reply) {
-            $reply->html = view('components.comments.reply', ['comment' => $reply])->render();
-            return $reply;
-        });
+        Log::info('💭 [REPLIES INDEX] Replies fetched from DB', [
+            'count' => $replies->count(),
+            'total' => $replies->total(),
+            'current_page' => $replies->currentPage(),
+            'has_more' => $replies->hasMorePages(),
+        ]);
 
-        return response()->json([
+        // Transform replies to include HTML using the collection method
+        $this->transformRepliesWithHtml($replies->getCollection());
+
+        $response = [
             'success' => true,
             'replies' => $replies->items(),
             'has_more' => $replies->hasMorePages(),
             'next_page' => $replies->currentPage() + 1,
+        ];
+
+        Log::info('💭 [REPLIES INDEX] Response prepared', [
+            'replies_count' => count($response['replies']),
+            'has_more' => $response['has_more'],
+            'next_page' => $response['next_page'],
         ]);
+
+        return response()->json($response);
     }
 
     public function destroy(Comment $comment): RedirectResponse

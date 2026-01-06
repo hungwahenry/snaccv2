@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Snacc;
 use App\Services\CommentService;
+use App\Traits\RendersCommentHtml;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class SnaccViewController extends Controller
 {
+    use RendersCommentHtml;
+
     public function __construct(
         protected CommentService $commentService
     ) {}
@@ -26,22 +29,11 @@ class SnaccViewController extends Controller
             'quotedSnacc.university'
         ]);
 
-        // Get comments using service
+        // Get comments using service (no replies loaded, just the count)
         $comments = $this->commentService->getCommentsForSnacc($snacc);
 
-        // Transform comments to include HTML for Alpine rendering
-        $comments->getCollection()->transform(function ($comment) {
-            // Transform replies to include HTML
-            if ($comment->replies) {
-                $comment->replies->transform(function ($reply) {
-                    $reply->html = view('components.comments.reply', ['comment' => $reply])->render();
-                    return $reply;
-                });
-            }
-
-            $comment->html = view('components.comments.card', ['comment' => $comment])->render();
-            return $comment;
-        });
+        // Transform comments to include HTML (no replies to transform)
+        $comments = $this->transformCommentsWithHtml($comments, includeReplies: false);
 
         return view('snaccs.show', compact('snacc', 'comments'));
     }

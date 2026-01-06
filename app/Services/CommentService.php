@@ -43,15 +43,8 @@ class CommentService
     public function getCommentsForSnacc(Snacc $snacc, int $perPage = 10)
     {
         return $snacc->comments()
-            ->with([
-                'user.profile',
-                'repliedToUser.profile',
-                'replies' => function($query) {
-                    $query->with(['user.profile', 'repliedToUser.profile'])
-                          ->orderBy('created_at', 'asc')
-                          ->limit(3); // Show first 3 replies
-                }
-            ])
+            ->with(['user.profile', 'repliedToUser.profile'])
+            ->withCount('replies') // Only get the count, not the actual replies
             ->whereNull('parent_comment_id')
             ->orderByDesc('likes_count')
             ->orderByDesc('created_at')

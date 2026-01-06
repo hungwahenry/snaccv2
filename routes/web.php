@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SnaccController;
+use App\Http\Controllers\SnaccLikeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -23,6 +24,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/snaccs', [SnaccController::class, 'store'])->name('snaccs.store');
     Route::delete('/snaccs/{snacc}', [SnaccController::class, 'destroy'])->name('snaccs.destroy');
+    Route::post('/snaccs/{snacc}/like', [SnaccLikeController::class, 'toggle'])->name('snaccs.like.toggle');
 
     Route::get('/giphy/trending', [GiphyController::class, 'trending'])->name('giphy.trending');
     Route::get('/giphy/search', [GiphyController::class, 'search'])->name('giphy.search');

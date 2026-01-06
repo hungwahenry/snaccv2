@@ -12,6 +12,7 @@ class Comment extends Model
         'snacc_id',
         'user_id',
         'parent_comment_id',
+        'replied_to_user_id',
         'content',
         'gif_url',
     ];
@@ -29,6 +30,11 @@ class Comment extends Model
     public function parentComment(): BelongsTo
     {
         return $this->belongsTo(Comment::class, 'parent_comment_id');
+    }
+
+    public function repliedToUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'replied_to_user_id');
     }
 
     public function replies(): HasMany

@@ -1,3 +1,5 @@
+@props(['hideNavigation' => false])
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -17,10 +19,12 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-white dark:bg-dark-bg">
-            @include('layouts.navigation')
+            @unless($hideNavigation)
+                @include('layouts.navigation')
+            @endunless
 
             <!-- Main Content Area -->
-            <main class="pb-16 lg:pb-0 lg:pl-20">
+            <main class="{{ !$hideNavigation ? 'pb-16 lg:pb-0 lg:pl-20' : '' }}">
                 {{ $slot }}
             </main>
 

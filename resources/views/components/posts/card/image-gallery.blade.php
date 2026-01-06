@@ -5,7 +5,7 @@
     $multipleImages = $images->count() > 1;
 @endphp
 
-<div class="mt-3 rounded-xl overflow-hidden">
+<div class="mt-3 rounded-xl overflow-hidden" x-data="{}">
     <div class="flex gap-1 {{ $multipleImages ? 'overflow-x-auto snap-x snap-mandatory scrollbar-hide' : '' }}">
         @foreach($images as $image)
             <div class="flex-shrink-0 snap-start">

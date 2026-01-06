@@ -6,6 +6,8 @@ export default () => ({
     visibility: 'campus',
     loading: false,
     error: '',
+    quotedSnaccId: null,
+    quotedSnaccData: null,
 
     init() {
         // Listen for gif-selected event
@@ -24,6 +26,17 @@ export default () => ({
         window.addEventListener('gif-selected', (e) => {
             this.selectedGif = e.detail;
         });
+
+        // Listen for quote-snacc event
+        window.addEventListener('quote-snacc', (e) => {
+            this.quotedSnaccId = e.detail.id;
+            this.quotedSnaccData = e.detail;
+        });
+    },
+
+    removeQuotedSnacc() {
+        this.quotedSnaccId = null;
+        this.quotedSnaccData = null;
     },
 
     get vibetags() {

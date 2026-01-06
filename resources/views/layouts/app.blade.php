@@ -29,6 +29,9 @@
 
             <!-- GIF Picker Modal -->
             <x-gif-picker.modal />
+
+            <!-- Lightbox -->
+            <x-lightbox />
         </div>
     </body>
 </html>

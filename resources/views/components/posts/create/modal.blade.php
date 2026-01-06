@@ -27,6 +27,9 @@
 
             <!-- Scrollable Content -->
             <div class="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+                <!-- Quoted Snacc Preview -->
+                <x-posts.create.quoted-snacc-preview />
+
                 <!-- Text Area -->
                 <div>
                     <textarea
@@ -61,9 +64,7 @@
                                 class="flex items-center justify-center w-8 h-8 text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-dark-bg rounded-lg transition-colors"
                                 title="add gif"
                             >
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
-                                </svg>
+                                <x-solar-file-smile-linear class="w-5 h-5" />
                             </button>
                         </div>
 
@@ -90,6 +91,13 @@
                     type="hidden"
                     name="gif_url"
                     :value="selectedGif ? selectedGif.original_url : ''"
+                />
+
+                <!-- Hidden Quoted Snacc ID Input -->
+                <input
+                    type="hidden"
+                    name="quoted_snacc_id"
+                    :value="quotedSnaccId"
                 />
 
                 <!-- Media Preview Component -->

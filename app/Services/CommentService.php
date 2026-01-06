@@ -15,16 +15,20 @@ class CommentService
         int $userId,
         ?string $content,
         ?string $gifUrl,
-        ?int $parentCommentId = null,
-        ?int $repliedToUserId = null
+        ?string $parentCommentSlug = null
     ): Comment {
+        $parentCommentId = null;
+        if ($parentCommentSlug) {
+            $parentComment = Comment::where('slug', $parentCommentSlug)->first();
+            $parentCommentId = $parentComment?->id;
+        }
+
         return Comment::create([
             'snacc_id' => $snaccId,
             'user_id' => $userId,
             'content' => $content,
             'gif_url' => $gifUrl,
             'parent_comment_id' => $parentCommentId,
-            'replied_to_user_id' => $repliedToUserId,
         ]);
     }
 

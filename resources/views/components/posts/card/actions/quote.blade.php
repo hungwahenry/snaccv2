@@ -10,7 +10,7 @@
     @click="
         window.dispatchEvent(new CustomEvent('quote-snacc', {
             detail: {
-                id: {{ $snacc->id }},
+                slug: '{{ $snacc->slug }}',
                 user: {
                     name: '{{ $snacc->user->name }}',
                     username: '{{ $snacc->user->profile->username }}',

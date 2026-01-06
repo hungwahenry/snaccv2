@@ -22,7 +22,7 @@ class SnaccService
         ?array $images = [],
         ?string $gifUrl = null,
         ?array $vibetags = [],
-        ?int $quotedSnaccId = null
+        ?string $quotedSnaccSlug = null
     ): Snacc {
         return DB::transaction(function () use (
             $userId,
@@ -32,8 +32,14 @@ class SnaccService
             $images,
             $gifUrl,
             $vibetags,
-            $quotedSnaccId
+            $quotedSnaccSlug
         ) {
+            $quotedSnaccId = null;
+            if ($quotedSnaccSlug) {
+                $quotedSnacc = Snacc::where('slug', $quotedSnaccSlug)->first();
+                $quotedSnaccId = $quotedSnacc?->id;
+            }
+
             $snacc = Snacc::create([
                 'user_id' => $userId,
                 'university_id' => $universityId,

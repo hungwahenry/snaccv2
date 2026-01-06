@@ -1,7 +1,7 @@
 @props(['comment'])
 
 <article class="border-b border-gray-200 dark:border-dark-border"
-         x-data="commentCard({{ $comment->id }}, {{ $comment->replies_count ?? 0 }})"
+         x-data="commentCard('{{ $comment->slug }}', {{ $comment->replies_count ?? 0 }})"
 >
     <div class="px-4 py-3">
         <div class="flex gap-3">
@@ -67,7 +67,7 @@
                 <!-- Replies Section (expanded state) -->
                 <div x-show="showReplies && repliesCount > 0" x-cloak class="mt-3">
                     <div class="space-y-3">
-                        <template x-for="reply in replies" :key="reply.id">
+                        <template x-for="reply in replies" :key="reply.slug">
                             <div x-html="reply.html || ''"></div>
                         </template>
                     </div>

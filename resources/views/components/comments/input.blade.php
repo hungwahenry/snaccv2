@@ -11,13 +11,12 @@
             @csrf
 
             <!-- Hidden inputs for reply data -->
-            <input type="hidden" name="parent_comment_id" x-model="parentCommentId">
-            <input type="hidden" name="replied_to_user_id" x-model="repliedToUserId">
+            <input type="hidden" name="parent_comment_slug" x-model="parentCommentSlug">
             <input type="hidden" name="gif_url" x-model="gifUrl">
 
             <!-- Replying To Banner -->
-            <div x-show="replyingToUsername" x-cloak class="mb-2 flex items-center justify-between text-xs text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-dark-bg px-3 py-2 rounded-lg">
-                <span>replying to <span class="text-primary-600 dark:text-primary-400 font-medium lowercase" x-text="'@' + replyingToUsername"></span></span>
+            <div x-show="repliedToUsername" x-cloak class="mb-2 flex items-center justify-between text-xs text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-dark-bg px-3 py-2 rounded-lg">
+                <span>replying to <span class="text-primary-600 dark:text-primary-400 font-medium lowercase" x-text="'@' + repliedToUsername"></span></span>
                 <button type="button" @click="clearReply()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

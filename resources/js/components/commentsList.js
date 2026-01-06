@@ -8,7 +8,7 @@ export default (initialComments, initialHasMore, initialPage, commentsIndexUrl) 
     init() {
         // Listen for new top-level comments
         window.addEventListener('comment-posted', (e) => {
-            if (e.detail.comment.parent_comment_id === null) {
+            if (e.detail.comment.parent_comment_slug === null) {
                 this.comments.unshift(e.detail.comment);
                 this.emptyState = false;
             }

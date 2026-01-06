@@ -18,7 +18,7 @@
                 <p class="text-sm text-gray-600 dark:text-gray-400 lowercase">be the first to comment!</p>
             </div>
 
-            <template x-for="comment in comments" :key="comment.id">
+            <template x-for="comment in comments" :key="comment.slug">
                 <div x-html="comment.html"></div>
             </template>
 

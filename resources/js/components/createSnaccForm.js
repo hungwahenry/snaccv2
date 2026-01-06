@@ -6,7 +6,7 @@ export default () => ({
     visibility: 'campus',
     loading: false,
     error: '',
-    quotedSnaccId: null,
+    quotedSnaccSlug: null,
     quotedSnaccData: null,
 
     init() {
@@ -29,13 +29,13 @@ export default () => ({
 
         // Listen for quote-snacc event
         window.addEventListener('quote-snacc', (e) => {
-            this.quotedSnaccId = e.detail.id;
+            this.quotedSnaccSlug = e.detail.slug;
             this.quotedSnaccData = e.detail;
         });
     },
 
     removeQuotedSnacc() {
-        this.quotedSnaccId = null;
+        this.quotedSnaccSlug = null;
         this.quotedSnaccData = null;
     },
 

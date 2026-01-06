@@ -93,11 +93,11 @@
                     :value="selectedGif ? selectedGif.original_url : ''"
                 />
 
-                <!-- Hidden Quoted Snacc ID Input -->
+                <!-- Hidden Quoted Snacc Slug Input -->
                 <input
                     type="hidden"
-                    name="quoted_snacc_id"
-                    :value="quotedSnaccId"
+                    name="quoted_snacc_slug"
+                    :value="quotedSnaccSlug"
                 />
 
                 <!-- Media Preview Component -->

@@ -29,10 +29,10 @@ class SnaccViewController extends Controller
             'quotedSnacc.university'
         ]);
 
-        // Get comments using service (no replies loaded, just the count)
+        // Get comments using service
         $comments = $this->commentService->getCommentsForSnacc($snacc);
 
-        // Transform comments to include HTML (no replies to transform)
+        // Transform comments to include HTML
         $comments = $this->transformCommentsWithHtml($comments, includeReplies: false);
 
         return view('snaccs.show', compact('snacc', 'comments'));

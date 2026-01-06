@@ -28,11 +28,10 @@ class CommentController extends Controller
             userId: auth()->id(),
             content: $validated['content'] ?? null,
             gifUrl: $validated['gif_url'] ?? null,
-            parentCommentId: $validated['parent_comment_id'] ?? null,
-            repliedToUserId: $validated['replied_to_user_id'] ?? null
+            parentCommentSlug: $validated['parent_comment_slug'] ?? null
         );
 
-        $comment->load(['user.profile', 'repliedToUser.profile'])
+        $comment->load(['user.profile', 'parentComment'])
                 ->loadCount('replies');
 
         if ($request->wantsJson()) {
@@ -43,7 +42,8 @@ class CommentController extends Controller
             return response()->json([
                 'success' => true,
                 'comment' => array_merge($comment->toArray(), [
-                    'html' => view($viewName, ['comment' => $comment])->render()
+                    'html' => view($viewName, ['comment' => $comment])->render(),
+                    'parent_comment_slug' => $comment->parentComment?->slug
                 ]),
             ]);
         }

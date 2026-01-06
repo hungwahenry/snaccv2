@@ -21,7 +21,7 @@ class StoreSnaccRequest extends FormRequest
             'gif_url' => ['nullable', 'url', 'max:500'],
             'vibetags' => ['nullable', 'array'],
             'vibetags.*' => ['string', 'max:50'],
-            'quoted_snacc_id' => ['nullable', 'exists:snaccs,id'],
+            'quoted_snacc_slug' => ['nullable', 'exists:snaccs,slug'],
         ];
     }
 

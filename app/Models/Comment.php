@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Comment extends Model
 {
@@ -15,7 +16,21 @@ class Comment extends Model
         'replied_to_user_id',
         'content',
         'gif_url',
+        'slug',
     ];
+
+    protected $hidden = [
+        'id',
+        'snacc_id',
+        'user_id',
+        'parent_comment_id',
+        'replied_to_user_id',
+    ];
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     public function snacc(): BelongsTo
     {
@@ -54,6 +69,12 @@ class Comment extends Model
 
     protected static function booted(): void
     {
+        static::creating(function (Comment $comment) {
+            if (empty($comment->slug)) {
+                $comment->slug = (string) Str::ulid();
+            }
+        });
+
         static::created(function (Comment $comment) {
             if ($comment->parent_comment_id) {
                 $comment->parentComment()->increment('replies_count');

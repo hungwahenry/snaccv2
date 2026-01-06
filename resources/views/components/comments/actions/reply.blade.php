@@ -4,10 +4,10 @@
     type="button"
     @click="window.dispatchEvent(new CustomEvent('reply-to-comment', {
         detail: {
-            commentId: {{ $comment->id }},
-            parentCommentId: {{ $comment->parent_comment_id ?? $comment->id }},
+            commentSlug: '{{ $comment->slug }}',
+            parentCommentSlug: '{{ $comment->parent_comment_id ? ($comment->parentComment->slug ?? $comment->slug) : $comment->slug }}',
             username: '{{ $comment->user->profile->username }}',
-            userId: {{ $comment->user_id }}
+            userSlug: '{{ $comment->user->profile->username }}'
         }
     }))"
     class="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors text-xs"

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Snacc extends Model
 {
@@ -17,11 +18,24 @@ class Snacc extends Model
         'visibility',
         'quoted_snacc_id',
         'is_deleted',
+        'slug',
     ];
 
     protected $casts = [
         'is_deleted' => 'boolean',
     ];
+
+    protected $hidden = [
+        'id',
+        'user_id',
+        'university_id',
+        'quoted_snacc_id',
+    ];
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     public function user(): BelongsTo
     {
@@ -71,6 +85,12 @@ class Snacc extends Model
 
     protected static function booted(): void
     {
+        static::creating(function (Snacc $snacc) {
+            if (empty($snacc->slug)) {
+                $snacc->slug = (string) Str::ulid();
+            }
+        });
+
         static::created(function (Snacc $snacc) {
             if ($snacc->quoted_snacc_id) {
                 Snacc::where('id', $snacc->quoted_snacc_id)->increment('quotes_count');

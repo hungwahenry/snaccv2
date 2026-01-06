@@ -2,18 +2,16 @@ export default (storeUrl, csrfToken) => ({
     content: '',
     gifUrl: '',
     selectedGif: null,
-    parentCommentId: null,
-    repliedToUserId: null,
-    replyingToUsername: null,
+    parentCommentSlug: null,
+    repliedToUsername: null,
     submitting: false,
     maxLength: 1000,
 
     init() {
         // Listen for reply-to-comment event
         window.addEventListener('reply-to-comment', (e) => {
-            this.parentCommentId = e.detail.parentCommentId;
-            this.repliedToUserId = e.detail.userId;
-            this.replyingToUsername = e.detail.username;
+            this.parentCommentSlug = e.detail.parentCommentSlug;
+            this.repliedToUsername = e.detail.username;
             this.$refs.commentInput.focus();
         });
 
@@ -29,9 +27,8 @@ export default (storeUrl, csrfToken) => ({
     },
 
     clearReply() {
-        this.parentCommentId = null;
-        this.repliedToUserId = null;
-        this.replyingToUsername = null;
+        this.parentCommentSlug = null;
+        this.repliedToUsername = null;
     },
 
     removeGif() {
@@ -61,8 +58,7 @@ export default (storeUrl, csrfToken) => ({
         const formData = {
             content: this.content || null,
             gif_url: this.gifUrl || null,
-            parent_comment_id: this.parentCommentId,
-            replied_to_user_id: this.repliedToUserId,
+            parent_comment_slug: this.parentCommentSlug,
         };
 
         try {

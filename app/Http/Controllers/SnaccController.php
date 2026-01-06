@@ -33,7 +33,7 @@ class SnaccController extends Controller
             images: $request->file('images') ?? [],
             gifUrl: $validated['gif_url'] ?? null,
             vibetags: $vibetags,
-            quotedSnaccId: $validated['quoted_snacc_id'] ?? null
+            quotedSnaccSlug: $validated['quoted_snacc_slug'] ?? null
         );
 
         return redirect()->route('home')->with('success', 'snacc posted successfully!');

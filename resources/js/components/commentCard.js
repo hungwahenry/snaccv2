@@ -1,4 +1,4 @@
-export default (commentId, initialRepliesCount) => ({
+export default (commentSlug, initialRepliesCount) => ({
     replies: [],
     repliesCount: initialRepliesCount,
     showReplies: false,
@@ -10,7 +10,7 @@ export default (commentId, initialRepliesCount) => ({
     init() {
         // Listen for new replies posted to this comment
         window.addEventListener('comment-posted', (e) => {
-            if (e.detail.comment.parent_comment_id == commentId) {
+            if (e.detail.comment.parent_comment_slug == commentSlug) {
                 this.replies.push(e.detail.comment);
                 this.repliesCount++;
                 this.showReplies = true;
@@ -39,7 +39,7 @@ export default (commentId, initialRepliesCount) => ({
         }
 
         this.loadingReplies = true;
-        const url = '/comments/' + commentId + '/replies?page=' + this.repliesPage;
+        const url = '/comments/' + commentSlug + '/replies?page=' + this.repliesPage;
 
         try {
             const response = await fetch(url, {

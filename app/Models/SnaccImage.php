@@ -13,6 +13,11 @@ class SnaccImage extends Model
         'order',
     ];
 
+    protected $hidden = [
+        'id',
+        'snacc_id',
+    ];
+
     public function snacc(): BelongsTo
     {
         return $this->belongsTo(Snacc::class);

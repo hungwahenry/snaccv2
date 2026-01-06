@@ -24,8 +24,7 @@ class StoreCommentRequest extends FormRequest
         return [
             'content' => 'nullable|string|max:1000',
             'gif_url' => 'nullable|url',
-            'parent_comment_id' => 'nullable|exists:comments,id',
-            'replied_to_user_id' => 'nullable|exists:users,id',
+            'parent_comment_slug' => 'nullable|exists:comments,slug',
         ];
     }
 

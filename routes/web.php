@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/snaccs/{snacc}/like', [SnaccLikeController::class, 'toggle'])->name('snaccs.like.toggle');
 
     Route::post('/snaccs/{snacc}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::get('/snaccs/{snacc}/comments', [CommentController::class, 'index'])->name('comments.index');
+    Route::get('/comments/{comment}/replies', [CommentController::class, 'replies'])->name('comments.replies');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
     Route::post('/comments/{comment}/like', [CommentLikeController::class, 'toggle'])->name('comments.like.toggle');
 

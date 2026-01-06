@@ -29,6 +29,20 @@ class SnaccViewController extends Controller
         // Get comments using service
         $comments = $this->commentService->getCommentsForSnacc($snacc);
 
+        // Transform comments to include HTML for Alpine rendering
+        $comments->getCollection()->transform(function ($comment) {
+            // Transform replies to include HTML
+            if ($comment->replies) {
+                $comment->replies->transform(function ($reply) {
+                    $reply->html = view('components.comments.reply', ['comment' => $reply])->render();
+                    return $reply;
+                });
+            }
+
+            $comment->html = view('components.comments.card', ['comment' => $comment])->render();
+            return $comment;
+        });
+
         return view('snaccs.show', compact('snacc', 'comments'));
     }
 }

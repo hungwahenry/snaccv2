@@ -26,7 +26,7 @@
         <!-- Replied To User -->
         @if($comment->replied_to_user_id && $comment->repliedToUser)
             <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                replying to <span class="text-primary-600 dark:text-primary-400 lowercase">@{{ $comment->repliedToUser->profile->username }}</span>
+                replying to <span class="text-primary-600 dark:text-primary-400 lowercase">{{ '@' . $comment->repliedToUser->profile->username }}</span>
             </div>
         @endif
 

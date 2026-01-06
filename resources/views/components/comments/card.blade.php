@@ -1,6 +1,45 @@
 @props(['comment'])
 
-<article class="border-b border-gray-200 dark:border-dark-border">
+<article class="border-b border-gray-200 dark:border-dark-border"
+         x-data="{
+             replies: {{ Js::from($comment->replies ?? []) }},
+             repliesCount: {{ $comment->replies_count ?? 0 }},
+             showReplies: false,
+             loadingReplies: false,
+             repliesPage: 2,
+             hasMoreReplies: {{ $comment->replies_count > 3 ? 'true' : 'false' }},
+             async loadMoreReplies() {
+                 if (this.loadingReplies) return;
+
+                 this.loadingReplies = true;
+                 try {
+                     const response = await fetch('/comments/{{ $comment->id }}/replies?page=' + this.repliesPage, {
+                         headers: {
+                             'Accept': 'application/json'
+                         }
+                     });
+                     const data = await response.json();
+
+                     if (data.success) {
+                         this.replies.push(...data.replies);
+                         this.hasMoreReplies = data.has_more;
+                         this.repliesPage = data.next_page;
+                     }
+                 } catch (error) {
+                     console.error('Error loading more replies:', error);
+                 } finally {
+                     this.loadingReplies = false;
+                 }
+             }
+         }"
+         @comment-posted.window="
+             if ($event.detail.comment.parent_comment_id == {{ $comment->id }}) {
+                 replies.push($event.detail.comment);
+                 repliesCount++;
+                 showReplies = true;
+             }
+         "
+>
     <div class="px-4 py-3">
         <div class="flex gap-3">
             <!-- Avatar -->
@@ -28,7 +67,7 @@
                 <!-- Replied To User (if this is a reply) -->
                 @if($comment->replied_to_user_id && $comment->repliedToUser)
                     <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">
-                        replying to <span class="text-primary-600 dark:text-primary-400 lowercase">@{{ $comment->repliedToUser->profile->username }}</span>
+                        replying to <span class="text-primary-600 dark:text-primary-400 lowercase">{{ '@' . $comment->repliedToUser->profile->username }}</span>
                     </div>
                 @endif
 
@@ -49,10 +88,47 @@
                 <!-- Actions -->
                 <x-comments.actions :comment="$comment" />
 
-                <!-- Replies Section -->
-                @if($comment->replies_count > 0)
-                    <x-comments.replies :comment="$comment" />
-                @endif
+                <!-- View Replies Button (collapsed state) -->
+                <div x-show="repliesCount > 0 && !showReplies" class="mt-3">
+                    <button
+                        @click="showReplies = true"
+                        type="button"
+                        class="text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 lowercase font-medium"
+                    >
+                        <span x-text="'view ' + repliesCount + ' ' + (repliesCount === 1 ? 'reply' : 'replies')"></span>
+                    </button>
+                </div>
+
+                <!-- Replies Section (expanded state) -->
+                <div x-show="showReplies && repliesCount > 0" x-cloak class="mt-3">
+                    <div class="space-y-3">
+                        <template x-for="reply in replies" :key="reply.id">
+                            <div x-html="reply.html || ''"></div>
+                        </template>
+                    </div>
+
+                    <!-- Load More Replies Button -->
+                    <div x-show="hasMoreReplies" class="mt-2">
+                        <button
+                            @click="loadMoreReplies()"
+                            :disabled="loadingReplies"
+                            type="button"
+                            class="text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 lowercase font-medium disabled:opacity-50"
+                        >
+                            <span x-show="!loadingReplies" x-text="'view ' + (repliesCount - replies.length) + ' more ' + ((repliesCount - replies.length) === 1 ? 'reply' : 'replies')"></span>
+                            <span x-show="loadingReplies">loading...</span>
+                        </button>
+                    </div>
+
+                    <!-- Hide Replies Button -->
+                    <button
+                        @click="showReplies = false"
+                        type="button"
+                        class="mt-2 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 lowercase"
+                    >
+                        hide replies
+                    </button>
+                </div>
             </div>
         </div>
     </div>

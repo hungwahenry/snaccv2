@@ -5,6 +5,7 @@
         <form
             action="{{ route('comments.store', $snacc) }}"
             method="POST"
+            @submit.prevent="postComment"
             x-data="{
                 content: '',
                 gifUrl: '',
@@ -12,6 +13,7 @@
                 parentCommentId: null,
                 repliedToUserId: null,
                 replyingToUsername: null,
+                submitting: false,
                 maxLength: 1000,
                 get remainingChars() {
                     return this.maxLength - this.content.length;
@@ -24,6 +26,61 @@
                 removeGif() {
                     this.selectedGif = null;
                     this.gifUrl = '';
+                },
+                resetForm() {
+                    this.content = '';
+                    this.gifUrl = '';
+                    this.selectedGif = null;
+                    this.clearReply();
+                    $refs.commentInput.style.height = 'auto';
+                },
+                async postComment() {
+                    if (this.content.trim() === '' && this.gifUrl === '') {
+                        return;
+                    }
+
+                    if (this.submitting) {
+                        return;
+                    }
+
+                    this.submitting = true;
+
+                    const formData = {
+                        content: this.content || null,
+                        gif_url: this.gifUrl || null,
+                        parent_comment_id: this.parentCommentId,
+                        replied_to_user_id: this.repliedToUserId,
+                    };
+
+                    try {
+                        const response = await fetch('{{ route('comments.store', $snacc) }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json',
+                            },
+                            body: JSON.stringify(formData),
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            // Dispatch event to add comment to list
+                            window.dispatchEvent(new CustomEvent('comment-posted', {
+                                detail: { comment: data.comment }
+                            }));
+
+                            // Reset form
+                            this.resetForm();
+                        } else {
+                            console.error('Failed to post comment:', data.message);
+                        }
+                    } catch (error) {
+                        console.error('Error posting comment:', error);
+                    } finally {
+                        this.submitting = false;
+                    }
                 }
             }"
             @reply-to-comment.window="
@@ -55,15 +112,15 @@
             </div>
 
             <!-- GIF Preview -->
-            <div x-show="selectedGif" x-cloak class="mb-2 relative">
-                <img :src="selectedGif?.url" alt="Selected GIF" class="max-h-40 rounded-lg">
+            <div x-show="selectedGif" x-cloak class="mb-2 relative inline-block">
+                <img :src="selectedGif?.url" alt="Selected GIF" class="max-h-24 rounded-lg">
                 <button
                     type="button"
                     @click="removeGif()"
-                    class="absolute top-2 right-2 p-1.5 bg-gray-900/80 hover:bg-gray-900 text-white rounded-full transition-colors"
+                    class="absolute top-1 right-1 p-1 bg-gray-900/80 hover:bg-gray-900 text-white rounded-full transition-colors"
                     title="Remove GIF"
                 >
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
@@ -112,12 +169,15 @@
                         <!-- Submit Button -->
                         <button
                             type="submit"
-                            :disabled="content.trim() === '' && gifUrl === ''"
-                            :class="(content.trim() === '' && gifUrl === '') ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-700 dark:hover:bg-primary-600'"
-                            class="flex-shrink-0 p-1.5 bg-primary-600 dark:bg-primary-500 text-white rounded-full transition-colors"
+                            :disabled="(content.trim() === '' && gifUrl === '') || submitting"
+                            :class="((content.trim() === '' && gifUrl === '') || submitting) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-700 dark:hover:bg-primary-600'"
+                            class="flex-shrink-0 p-1.5 bg-primary-600 dark:bg-primary-500 text-white rounded-full transition-colors flex items-center justify-center"
                             title="post comment"
                         >
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div x-show="submitting" class="w-5 h-5 flex items-center justify-center">
+                                <x-loading-dots size="sm" color="white" />
+                            </div>
+                            <svg x-show="!submitting" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                             </svg>
                         </button>

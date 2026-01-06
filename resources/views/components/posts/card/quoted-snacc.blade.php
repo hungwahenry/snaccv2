@@ -1,7 +1,7 @@
 @props(['snacc'])
 
 <div class="mt-3 border border-gray-200 dark:border-dark-border rounded-xl overflow-hidden hover:bg-gray-50 dark:hover:bg-dark-bg/50 transition-colors cursor-pointer">
-    <div class="px-4 pt-3 pb-0">
+    <div class="px-4 pt-3">
         <!-- Header (scaled down) -->
         <div class="flex items-center gap-1.5 mb-1.5 text-xs">
             <img
@@ -23,15 +23,19 @@
         </div>
 
         <!-- Content (scaled down and clamped) -->
-        <div class="text-sm line-clamp-3">
+        <div class="text-sm line-clamp-3 mb-3">
             <x-posts.card.content :snacc="$snacc" />
         </div>
-
-        <!-- Media -->
-        @if($snacc->images->isNotEmpty())
-            <x-posts.card.image-gallery :images="$snacc->images" />
-        @elseif($snacc->gif_url)
-            <x-posts.card.gif :url="$snacc->gif_url" />
-        @endif
     </div>
+
+    <!-- Media -->
+    @if($snacc->images->isNotEmpty())
+        <div class="px-4 pb-3">
+            <x-posts.card.image-gallery :images="$snacc->images" />
+        </div>
+    @elseif($snacc->gif_url)
+        <div class="px-4 pb-3">
+            <x-posts.card.gif :url="$snacc->gif_url" />
+        </div>
+    @endif
 </div>

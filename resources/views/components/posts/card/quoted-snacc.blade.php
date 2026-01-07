@@ -1,6 +1,6 @@
 @props(['snacc'])
 
-<div class="mt-3 border border-gray-200 dark:border-dark-border rounded-xl overflow-hidden hover:bg-gray-50 dark:hover:bg-dark-bg/50 transition-colors cursor-pointer">
+<a href="{{ route('snaccs.show', $snacc) }}" class="block mt-3 border border-gray-200 dark:border-dark-border rounded-xl overflow-hidden hover:bg-gray-50 dark:hover:bg-dark-bg/50 transition-colors">
     <div class="px-4 pt-3">
         <!-- Header (scaled down) -->
         <div class="flex items-center gap-1.5 mb-1.5 text-xs">
@@ -38,4 +38,4 @@
             <x-posts.card.gif :url="$snacc->gif_url" />
         </div>
     @endif
-</div>
+</a>

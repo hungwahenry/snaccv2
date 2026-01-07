@@ -15,9 +15,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Seed universities first
+        // Seed universities and cred tiers first
         $this->call([
             UniversitySeeder::class,
+            CredTierSeeder::class,
             ReportCategorySeeder::class,
         ]);
 

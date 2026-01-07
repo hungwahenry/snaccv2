@@ -23,6 +23,12 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'cred_score',
+        'login_streak',
+        'last_login_date',
+        'daily_cred_earned',
+        'daily_cred_reset_date',
+        'cred_tier_id',
     ];
 
     /**
@@ -44,6 +50,11 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'cred_score' => 'integer',
+            'login_streak' => 'integer',
+            'last_login_date' => 'date',
+            'daily_cred_earned' => 'integer',
+            'daily_cred_reset_date' => 'date',
         ];
     }
 
@@ -60,5 +71,15 @@ class User extends Authenticatable
     public function receivedReports(): MorphMany
     {
         return $this->morphMany(Report::class, 'reportable');
+    }
+
+    public function credTier(): HasOne
+    {
+        return $this->hasOne(CredTier::class, 'id', 'cred_tier_id');
+    }
+
+    public function credTransactions(): HasMany
+    {
+        return $this->hasMany(CredTransaction::class);
     }
 }

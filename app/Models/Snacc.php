@@ -21,10 +21,18 @@ class Snacc extends Model
         'is_deleted',
         'slug',
         'status',
+        'heat_score',
+        'heat_peak_at',
+        'heat_calculated_at',
+        'views_count',
     ];
 
     protected $casts = [
         'is_deleted' => 'boolean',
+        'heat_score' => 'integer',
+        'views_count' => 'integer',
+        'heat_peak_at' => 'datetime',
+        'heat_calculated_at' => 'datetime',
     ];
 
     protected $hidden = [
@@ -95,24 +103,23 @@ class Snacc extends Model
         return $this->reports()->where('user_id', $user->id)->exists();
     }
 
-    protected static function booted(): void
+    // Scopes
+    public function scopeTrending($query)
     {
-        static::creating(function (Snacc $snacc) {
-            if (empty($snacc->slug)) {
-                $snacc->slug = (string) Str::ulid();
-            }
-        });
-
-        static::created(function (Snacc $snacc) {
-            if ($snacc->quoted_snacc_id) {
-                Snacc::where('id', $snacc->quoted_snacc_id)->increment('quotes_count');
-            }
-        });
-
-        static::deleted(function (Snacc $snacc) {
-            if ($snacc->quoted_snacc_id) {
-                Snacc::where('id', $snacc->quoted_snacc_id)->decrement('quotes_count');
-            }
-        });
+        return $query->where('heat_score', '>', 0)
+            ->where('created_at', '>=', now()->subDays(4))
+            ->orderByDesc('heat_score')
+            ->orderByDesc('created_at');
     }
+
+    public function scopeForUniversity($query, int $universityId)
+    {
+        return $query->where('university_id', $universityId);
+    }
+
+    public function scopeNotDeleted($query)
+    {
+        return $query->where('is_deleted', false);
+    }
+
 }

@@ -8,6 +8,7 @@ use App\Models\ReportCategory;
 use App\Models\Snacc;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class ReportService
 {
@@ -62,9 +63,7 @@ class ReportService
     {
         $report = Report::where('slug', $reportSlug)->firstOrFail();
 
-        if ($report->user_id !== $userId) {
-            abort(403, 'Unauthorized');
-        }
+        Gate::authorize('view', $report);
 
         return $report->load(['reportable', 'category', 'reviewer']);
     }

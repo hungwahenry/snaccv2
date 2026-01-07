@@ -7,6 +7,7 @@ use App\Models\Snacc;
 use App\Services\SnaccService;
 use App\Services\VibetagService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 
 class SnaccController extends Controller
 {
@@ -41,9 +42,7 @@ class SnaccController extends Controller
 
     public function destroy(Snacc $snacc): RedirectResponse
     {
-        if ($snacc->user_id !== auth()->id()) {
-            abort(403);
-        }
+        Gate::authorize('delete', $snacc);
 
         $this->snaccService->deleteSnacc($snacc);
 

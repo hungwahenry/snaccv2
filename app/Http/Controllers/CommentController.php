@@ -10,6 +10,7 @@ use App\Traits\RendersCommentHtml;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class CommentController extends Controller
 {
@@ -79,10 +80,7 @@ class CommentController extends Controller
 
     public function destroy(Comment $comment): RedirectResponse
     {
-        // Ensure user owns the comment
-        if ($comment->user_id !== auth()->id()) {
-            abort(403);
-        }
+        Gate::authorize('delete', $comment);
 
         $snaccId = $comment->snacc_id;
         $this->commentService->deleteComment($comment);

@@ -1,29 +1,30 @@
 @props(['reportableType', 'reportableSlug', 'modalName'])
 
-<x-modal :name="$modalName" focusable>
-    <div class="p-6" x-data="reportModal('{{ $reportableType }}', '{{ $reportableSlug }}')">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-white lowercase">
+<x-modal :name="$modalName" maxWidth="md" focusable>
+    <div class="flex flex-col" x-data="reportModal('{{ $reportableType }}', '{{ $reportableSlug }}', '{{ $modalName }}')">
+        <!-- Header -->
+        <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-dark-border">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-white lowercase" style="font-family: 'Boldonse', sans-serif;">
                 report {{ $reportableType }}
             </h2>
             <button
+                type="button"
                 @click="$dispatch('close')"
-                class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
+                class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
             >
-                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
         </div>
 
         <!-- Loading categories -->
-        <div x-show="loading" class="text-center py-8">
-            <x-loading-dots />
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 lowercase">loading...</p>
+        <div x-show="loading" class="flex items-center justify-center py-12 px-4 text-primary-600 dark:text-primary-400">
+            <x-loading-dots size="lg" />
         </div>
 
         <!-- Report form -->
-        <form x-show="!loading && !submitted" @submit.prevent="submitReport" class="space-y-4">
+        <form x-show="!loading && !submitted" @submit.prevent="submitReport" class="px-4 py-4 space-y-4">
             <!-- Category selection -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 lowercase">
@@ -88,7 +89,7 @@
         </form>
 
         <!-- Success message -->
-        <div x-show="submitted" class="text-center py-8">
+        <div x-show="submitted" class="text-center px-4 py-8">
             <div class="w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg class="w-8 h-8 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Models\CommentLike;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Gate;
 
 class CommentLikeController extends Controller
 {
@@ -18,10 +19,12 @@ class CommentLikeController extends Controller
 
         if ($like) {
             // Unlike
+            Gate::authorize('delete', $like);
             $like->delete();
             $isLiked = false;
         } else {
             // Like
+            Gate::authorize('create', CommentLike::class);
             CommentLike::create([
                 'comment_id' => $comment->id,
                 'user_id' => $user->id,

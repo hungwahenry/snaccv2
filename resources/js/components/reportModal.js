@@ -1,18 +1,24 @@
-export default (reportableType, reportableSlug) => ({
+export default (reportableType, reportableSlug, modalName) => ({
     reportableType: reportableType,
     reportableSlug: reportableSlug,
+    modalName: modalName,
     categories: [],
     selectedCategory: '',
     description: '',
-    loading: true,
+    loading: false,
     submitting: false,
     submitted: false,
     attemptedSubmit: false,
     error: '',
+    categoriesLoaded: false,
 
     init() {
-        // Load categories when modal opens
-        this.loadCategories();
+        // Listen for modal open event
+        window.addEventListener('open-modal', (event) => {
+            if (event.detail === this.modalName && !this.categoriesLoaded) {
+                this.loadCategories();
+            }
+        });
     },
 
     async loadCategories() {
@@ -25,6 +31,7 @@ export default (reportableType, reportableSlug) => ({
 
             if (response.ok) {
                 this.categories = data.categories;
+                this.categoriesLoaded = true;
             } else {
                 this.error = 'failed to load report categories';
             }

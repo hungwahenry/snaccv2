@@ -25,7 +25,7 @@ class SnaccController extends Controller
             explicitTags: $validated['vibetags'] ?? []
         );
 
-        $this->snaccService->createSnacc(
+        $snacc = $this->snaccService->createSnacc(
             userId: auth()->id(),
             universityId: auth()->user()->profile->university_id,
             content: $validated['content'] ?? null,
@@ -36,7 +36,7 @@ class SnaccController extends Controller
             quotedSnaccSlug: $validated['quoted_snacc_slug'] ?? null
         );
 
-        return redirect()->route('home')->with('success', 'snacc posted successfully!');
+        return redirect()->route('snaccs.show', $snacc)->with('success', 'snacc posted successfully!');
     }
 
     public function destroy(Snacc $snacc): RedirectResponse

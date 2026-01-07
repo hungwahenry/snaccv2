@@ -59,7 +59,7 @@
                             x-ref="commentInput"
                             x-model="content"
                             :maxlength="maxLength"
-                            placeholder="write a comment..."
+                            placeholder="well say something..."
                             rows="1"
                             class="flex-1 bg-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none resize-none lowercase text-sm"
                             style="max-height: 100px;"

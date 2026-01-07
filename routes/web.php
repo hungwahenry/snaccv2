@@ -6,6 +6,7 @@ use App\Http\Controllers\GiphyController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SnaccController;
 use App\Http\Controllers\SnaccLikeController;
 use App\Http\Controllers\SnaccViewController;
@@ -38,6 +39,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/giphy/trending', [GiphyController::class, 'trending'])->name('giphy.trending');
     Route::get('/giphy/search', [GiphyController::class, 'search'])->name('giphy.search');
+
+    Route::get('/reports/categories/{type}', [ReportController::class, 'categories'])->name('reports.categories');
+    Route::post('/reports', [ReportController::class, 'store'])->name('reports.store');
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/{report}', [ReportController::class, 'show'])->name('reports.show');
 });
 
 require __DIR__.'/auth.php';

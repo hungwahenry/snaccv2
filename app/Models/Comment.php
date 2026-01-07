@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Str;
 
 class Comment extends Model
@@ -17,6 +18,7 @@ class Comment extends Model
         'content',
         'gif_url',
         'slug',
+        'status',
     ];
 
     protected $hidden = [
@@ -62,9 +64,19 @@ class Comment extends Model
         return $this->hasMany(CommentLike::class);
     }
 
+    public function reports(): MorphMany
+    {
+        return $this->morphMany(Report::class, 'reportable');
+    }
+
     public function isLikedBy(User $user): bool
     {
         return $this->likes()->where('user_id', $user->id)->exists();
+    }
+
+    public function isReportedBy(User $user): bool
+    {
+        return $this->reports()->where('user_id', $user->id)->exists();
     }
 
     protected static function booted(): void

@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         // Seed universities first
         $this->call([
             UniversitySeeder::class,
+            ReportCategorySeeder::class,
         ]);
 
         // User::factory(10)->create();

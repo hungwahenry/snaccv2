@@ -3,6 +3,7 @@
     x-data="lightbox()"
     x-show="isOpen"
     x-cloak
+    style="display: none"
     @keydown.escape.window="close()"
     @lightbox-open.window="open($event.detail)"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/95"

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Str;
 
 class Snacc extends Model
@@ -19,6 +20,7 @@ class Snacc extends Model
         'quoted_snacc_id',
         'is_deleted',
         'slug',
+        'status',
     ];
 
     protected $casts = [
@@ -78,9 +80,19 @@ class Snacc extends Model
         return $this->hasMany(Snacc::class, 'quoted_snacc_id');
     }
 
+    public function reports(): MorphMany
+    {
+        return $this->morphMany(Report::class, 'reportable');
+    }
+
     public function isLikedBy(User $user): bool
     {
         return $this->likes()->where('user_id', $user->id)->exists();
+    }
+
+    public function isReportedBy(User $user): bool
+    {
+        return $this->reports()->where('user_id', $user->id)->exists();
     }
 
     protected static function booted(): void

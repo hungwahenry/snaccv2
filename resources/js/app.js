@@ -10,6 +10,7 @@ import searchableSelect from './components/searchableSelect';
 import commentCard from './components/commentCard';
 import commentsList from './components/commentsList';
 import commentInput from './components/commentInput';
+import reportModal from './components/reportModal';
 
 window.Alpine = Alpine;
 
@@ -23,5 +24,6 @@ Alpine.data('searchableSelect', searchableSelect);
 Alpine.data('commentCard', commentCard);
 Alpine.data('commentsList', commentsList);
 Alpine.data('commentInput', commentInput);
+Alpine.data('reportModal', reportModal);
 
 Alpine.start();

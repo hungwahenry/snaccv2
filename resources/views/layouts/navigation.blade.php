@@ -7,7 +7,7 @@
         </a>
 
         <!-- Home -->
-        <a href="{{ route('home') }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('home') ? 'text-primary-500 bg-primary-50 dark:bg-primary-900/10' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group">
+        <a href="{{ route('home') }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('home') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group">
             <div class="relative">
                 @if(request()->routeIs('home'))
                     <x-solar-home-2-bold class="w-7 h-7" />
@@ -15,7 +15,7 @@
                     <x-solar-home-2-linear class="w-7 h-7" />
                 @endif
             </div>
-            <span class="hidden lg:block ml-4 text-base font-medium capitalize">home</span>
+            <span class="hidden lg:block ml-4 text-base {{ request()->routeIs('home') ? 'font-bold' : 'font-medium' }} capitalize">home</span>
         </a>
 
         <!-- Explore -->
@@ -45,7 +45,7 @@
         </a>
 
         <!-- Profile -->
-        <a href="{{ route('profile.edit') }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('profile.*') ? 'text-primary-500 bg-primary-50 dark:bg-primary-900/10' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group">
+        <a href="{{ route('profile.edit') }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('profile.*') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group">
             @if(auth()->user()->profile?->profile_photo)
                 <img src="{{ Storage::url(auth()->user()->profile->profile_photo) }}" alt="Profile" class="w-7 h-7 rounded-full object-cover border-2 {{ request()->routeIs('profile.*') ? 'border-primary-500' : 'border-transparent' }}" />
             @else
@@ -55,7 +55,7 @@
                     <x-solar-user-circle-linear class="w-7 h-7" />
                 @endif
             @endif
-            <span class="hidden lg:block ml-4 text-base font-medium capitalize">profile</span>
+            <span class="hidden lg:block ml-4 text-base {{ request()->routeIs('profile.*') ? 'font-bold' : 'font-medium' }} capitalize">profile</span>
         </a>
 
         <!-- Logout - Desktop Only, at bottom -->

@@ -4,7 +4,7 @@
     <!-- Avatar (smaller) -->
     <div class="flex-shrink-0">
         <img
-            src="{{ $comment->user->profile->profile_photo ? Storage::url($comment->user->profile->profile_photo) : 'https://ui-avatars.com/api/?name=' . urlencode($comment->user->name) . '&background=random' }}"
+            src="{{ $comment->user->profile->profile_photo ? Storage::url($comment->user->profile->profile_photo) : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' . urlencode($comment->user->name) }}"
             alt="{{ $comment->user->name }}"
             class="w-8 h-8 rounded-full object-cover"
         >
@@ -18,9 +18,16 @@
                 {{ $comment->user->profile->username }}
             </span>
             <span class="text-gray-400 dark:text-gray-500 text-xs">·</span>
+            <span class="text-xs text-gray-500 dark:text-gray-400 lowercase">
+                {{ $comment->user->profile->university?->acronym }}
+            </span>
+            <span class="text-gray-400 dark:text-gray-500 text-xs">·</span>
             <time class="text-xs text-gray-500 dark:text-gray-400 lowercase">
                 {{ $comment->created_at->diffForHumans(short: true) }}
             </time>
+            <div class="ml-auto">
+                <x-comments.menu :comment="$comment" />
+            </div>
         </div>
 
         <!-- Replied To User -->

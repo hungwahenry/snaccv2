@@ -7,7 +7,7 @@
                 <!-- Header -->
                 <div class="flex items-center gap-1.5 mb-1.5">
                     <img
-                        :src="quotedSnaccData?.user?.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(quotedSnaccData?.user?.name || 'User') + '&background=random'"
+                        :src="quotedSnaccData?.user?.avatar || 'https://api.dicebear.com/9.x/thumbs/svg?seed=' + encodeURIComponent(quotedSnaccData?.user?.name || 'User') "
                         :alt="quotedSnaccData?.user?.name"
                         class="w-5 h-5 rounded-full object-cover"
                     >

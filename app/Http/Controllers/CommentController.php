@@ -82,9 +82,9 @@ class CommentController extends Controller
     {
         Gate::authorize('delete', $comment);
 
-        $snaccId = $comment->snacc_id;
+        $snaccSlug = $comment->snacc->slug;
         $this->commentService->deleteComment($comment);
 
-        return redirect()->route('snaccs.show', $snaccId)->with('success', 'Comment deleted!');
+        return redirect()->route('snaccs.show', $snaccSlug)->with('success', 'Comment deleted!');
     }
 }

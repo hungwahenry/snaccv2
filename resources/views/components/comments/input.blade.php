@@ -1,7 +1,7 @@
 @props(['snacc'])
 
-<div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-dark-surface border-t border-gray-200 dark:border-dark-border shadow-lg z-10">
-    <div class="max-w-2xl mx-auto px-4 py-3">
+<div class="fixed bottom-16 lg:bottom-0 left-0 right-0 lg:left-64 lg:right-80 bg-white dark:bg-dark-surface border-t border-gray-200 dark:border-dark-border shadow-lg z-10">
+    <div class="px-4 py-3">
         <form
             action="{{ route('comments.store', $snacc) }}"
             method="POST"
@@ -44,7 +44,7 @@
                 <!-- Avatar -->
                 <div class="flex-shrink-0">
                     <img
-                        src="{{ auth()->user()->profile->profile_photo ? Storage::url(auth()->user()->profile->profile_photo) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=random' }}"
+                        src="{{ auth()->user()->profile->profile_photo ? Storage::url(auth()->user()->profile->profile_photo) : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' . urlencode(auth()->user()->name) }}"
                         alt="{{ auth()->user()->name }}"
                         class="w-10 h-10 rounded-full object-cover"
                     >

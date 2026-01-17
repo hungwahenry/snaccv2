@@ -5,7 +5,7 @@
         <!-- Header (scaled down) -->
         <div class="flex items-center gap-1.5 mb-1.5 text-xs">
             <img
-                src="{{ $snacc->user->profile->profile_photo ? Storage::url($snacc->user->profile->profile_photo) : 'https://ui-avatars.com/api/?name=' . urlencode($snacc->user->name) . '&background=random' }}"
+                src="{{ $snacc->user->profile->profile_photo ? Storage::url($snacc->user->profile->profile_photo) : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' . urlencode($snacc->user->name) }}"
                 alt="{{ $snacc->user->name }}"
                 class="w-5 h-5 rounded-full object-cover"
             >

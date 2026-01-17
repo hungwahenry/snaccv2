@@ -17,6 +17,7 @@ Route::get('/', function () {
 });
 
 Route::get('/home', [HomeController::class, 'index'])->middleware(['auth', 'verified'])->name('home');
+Route::get('/explore', [\App\Http\Controllers\ExploreController::class, 'index'])->middleware(['auth', 'verified'])->name('explore');
 
 Route::middleware('auth')->group(function () {
     Route::get('/onboarding', [OnboardingController::class, 'show'])->name('onboarding');

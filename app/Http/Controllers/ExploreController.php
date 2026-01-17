@@ -6,14 +6,13 @@ use App\Models\Snacc;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class HomeController extends Controller
+class ExploreController extends Controller
 {
-    public function index(Request $request): View|\Illuminate\Http\JsonResponse
+    public function index(Request $request)
     {
-        $user = $request->user();
         $sort = $request->query('sort', 'trending');
 
-        // Campus feed: strictly user's university
+        // Global feed: all non-deleted snaccs
         $query = Snacc::with([
             'user.profile',
             'university',
@@ -21,9 +20,7 @@ class HomeController extends Controller
             'vibetags',
             'quotedSnacc.user.profile',
             'quotedSnacc.images'
-        ])
-        ->forUniversity($user->profile->university_id)
-        ->notDeleted();
+        ])->notDeleted();
 
         // Sorting logic
         if ($sort === 'trending') {
@@ -43,6 +40,6 @@ class HomeController extends Controller
             ]);
         }
 
-        return view('home', compact('snaccs', 'sort'));
+        return view('explore', compact('snaccs', 'sort'));
     }
 }

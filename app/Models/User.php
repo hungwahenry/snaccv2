@@ -82,4 +82,22 @@ class User extends Authenticatable
     {
         return $this->hasMany(CredTransaction::class);
     }
+
+    public function addedUsers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_adds', 'user_id', 'added_user_id')
+            ->withTimestamps();
+    }
+
+    public function addedByUsers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_adds', 'added_user_id', 'user_id')
+            ->withTimestamps();
+    }
+
+    public function isAddedBy(User $user): bool
+    {
+        return $this->addedByUsers()->where('user_id', $user->id)->exists();
+    }
 }
+

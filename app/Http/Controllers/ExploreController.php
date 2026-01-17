@@ -25,6 +25,14 @@ class ExploreController extends Controller
         // Sorting logic
         if ($sort === 'trending') {
             $query->trending();
+        } elseif ($sort === 'added') {
+            $user = $request->user();
+            if ($user) {
+                $query->whereIn('user_id', $user->addedUsers()->pluck('id'))
+                      ->latest();
+            } else {
+                $query->whereRaw('0 = 1');
+            }
         } else {
             $query->latest();
         }

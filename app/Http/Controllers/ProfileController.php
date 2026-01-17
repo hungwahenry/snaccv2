@@ -2,55 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
+use App\Models\Profile;
+use App\Models\Snacc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
-    public function edit(Request $request): View
+    public function show(Request $request, string $username)
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
-    }
+        $profile = Profile::where('username', $username)->firstOrFail();
+        $user = $profile->user;
 
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
+        // Authorize profile view
+        Gate::authorize('view', $user);
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $isOwnProfile = Auth::id() === $user->id;
+        $isAdded = Auth::check() ? $user->isAddedBy(Auth::user()) : false;
+
+        $snaccs = Snacc::where('user_id', $user->id)
+            ->with([
+                'user.profile',
+                'user.credTier',
+                'university',
+                'images',
+                'vibetags',
+                'quotedSnacc.user.profile',
+                'quotedSnacc.images'
+            ])
+            ->withCount(['comments', 'likes'])
+            ->notDeleted()
+            ->latest()
+            ->paginate(10);
+
+        // Infinite Scroll support
+        if ($request->ajax()) {
+            $view = view('components.posts.feed-list', compact('snaccs'))->render();
+            return response()->json([
+                'html' => $view,
+                'next_page_url' => $snaccs->nextPageUrl()
+            ]);
         }
 
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    }
-
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return view('profile.show', compact('user', 'profile', 'isOwnProfile', 'isAdded', 'snaccs'));
     }
 }
+

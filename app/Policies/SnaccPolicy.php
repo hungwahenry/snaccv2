@@ -21,7 +21,7 @@ class SnaccPolicy
      */
     public function view(?User $user, Snacc $snacc): bool
     {
-        // Global snaccs can be viewed by anyone (including guests)
+        // Global snaccs can be viewed by anyone
         if ($snacc->visibility === 'global') {
             return true;
         }

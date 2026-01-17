@@ -10,9 +10,9 @@
         <a href="{{ route('home') }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('home') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group">
             <div class="relative">
                 @if(request()->routeIs('home'))
-                    <x-solar-home-2-bold class="w-7 h-7" />
+                    <x-solar-home-smile-bold class="w-7 h-7" />
                 @else
-                    <x-solar-home-2-linear class="w-7 h-7" />
+                    <x-solar-home-smile-linear class="w-7 h-7" />
                 @endif
             </div>
             <span class="hidden lg:block ml-4 text-base {{ request()->routeIs('home') ? 'font-bold' : 'font-medium' }} capitalize">home</span>
@@ -31,7 +31,7 @@
             @click="$dispatch('open-modal', 'create-snacc')"
             class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400 transition-colors group"
         >
-            <x-solar-add-circle-linear class="w-7 h-7" />
+            <x-solar-user-hand-up-linear class="w-7 h-7" />
             <span class="hidden lg:block ml-4 text-base font-medium capitalize">create snacc</span>
         </button>
 
@@ -46,15 +46,11 @@
 
         <!-- Profile -->
         <a href="{{ route('profile.edit') }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('profile.*') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group">
-            @if(auth()->user()->profile?->profile_photo)
-                <img src="{{ Storage::url(auth()->user()->profile->profile_photo) }}" alt="Profile" class="w-7 h-7 rounded-full object-cover border-2 {{ request()->routeIs('profile.*') ? 'border-primary-500' : 'border-transparent' }}" />
-            @else
-                @if(request()->routeIs('profile.*'))
-                    <x-solar-user-circle-bold class="w-7 h-7" />
-                @else
-                    <x-solar-user-circle-linear class="w-7 h-7" />
-                @endif
-            @endif
+            <img 
+                src="{{ auth()->user()->profile?->profile_photo ? Storage::url(auth()->user()->profile->profile_photo) : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' . urlencode(auth()->user()->name) }}" 
+                alt="Profile" 
+                class="w-7 h-7 rounded-full object-cover border-2 {{ request()->routeIs('profile.*') ? 'border-primary-500' : 'border-transparent' }}" 
+            />
             <span class="hidden lg:block ml-4 text-base {{ request()->routeIs('profile.*') ? 'font-bold' : 'font-medium' }} capitalize">profile</span>
         </a>
 

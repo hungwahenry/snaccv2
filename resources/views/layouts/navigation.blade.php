@@ -37,7 +37,7 @@
             @click="$dispatch('open-modal', 'create-snacc')"
             class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400 transition-colors group"
         >
-            <x-solar-user-hand-up-linear class="w-7 h-7" />
+            <x-solar-add-circle-linear class="w-7 h-7" />
             <span class="hidden lg:block ml-4 text-base font-medium capitalize">create snacc</span>
         </button>
 

@@ -1,5 +1,5 @@
-<x-app-layout :hideNavigation="true">
-    <div class="max-w-2xl mx-auto pb-24"
+<x-app-layout>
+    <div class="pb-24"
          x-data="commentsList(
              {{ Js::from($comments->items()) }},
              {{ $comments->hasMorePages() ? 'true' : 'false' }},
@@ -27,7 +27,7 @@
                 <button
                     @click="loadMoreComments()"
                     :disabled="loadingMore"
-                    class="w-full px-4 py-2.5 bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border hover:border-primary-500 dark:hover:border-primary-500 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors lowercase disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="w-full min-h-[42px] px-4 py-2.5 bg-gray-50 dark:bg-dark-bg border border-gray-200 dark:border-dark-border hover:border-primary-500 dark:hover:border-primary-500 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors lowercase disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     <span x-show="!loadingMore">view more comments</span>
                     <span x-show="loadingMore" class="flex items-center justify-center">

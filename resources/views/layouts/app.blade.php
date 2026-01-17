@@ -19,12 +19,15 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-white dark:bg-dark-bg">
+            <x-top-bar />
+
             @unless($hideNavigation)
                 @include('layouts.navigation')
+                <x-right-sidebar />
             @endunless
 
             <!-- Main Content Area -->
-            <main class="{{ !$hideNavigation ? 'pb-16 lg:pb-0 lg:pl-20' : '' }}">
+            <main class="{{ !$hideNavigation ? 'pb-16 lg:pb-0 lg:pl-64 lg:pr-80' : '' }}">
                 {{ $slot }}
             </main>
 

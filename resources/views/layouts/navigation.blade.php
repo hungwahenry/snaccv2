@@ -2,8 +2,7 @@
     <div class="flex justify-around items-center h-16 lg:flex-col lg:h-full lg:justify-start lg:py-6 lg:px-4 lg:gap-2">
         <!-- Logo - Desktop Only -->
         <a href="{{ route('home') }}" class="hidden lg:flex items-center gap-3 px-4 py-3 mb-4 w-full text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-dark-bg rounded-xl transition-colors">
-            <x-application-logo class="w-8 h-8 fill-current text-primary-500" />
-            <span class="text-xl font-bold font-display tracking-tight">snacc</span>
+            <x-application-logo class="h-10 w-auto" />
         </a>
 
         <!-- Home -->
@@ -37,7 +36,7 @@
             @click="$dispatch('open-modal', 'create-snacc')"
             class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400 transition-colors group"
         >
-            <x-solar-add-circle-linear class="w-7 h-7" />
+            <x-solar-magic-stick-3-linear class="w-7 h-7" />
             <span class="hidden lg:block ml-4 text-base font-medium capitalize">create snacc</span>
         </button>
 

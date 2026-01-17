@@ -1,7 +1,16 @@
 <?php
 
+
 namespace App\Providers;
 
+use App\Models\Comment;
+use App\Models\CommentLike;
+use App\Models\Snacc;
+use App\Models\SnaccLike;
+use App\Observers\CommentLikeObserver;
+use App\Observers\CommentObserver;
+use App\Observers\SnaccLikeObserver;
+use App\Observers\SnaccObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +28,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Snacc::observe(SnaccObserver::class);
+        SnaccLike::observe(SnaccLikeObserver::class);
+        Comment::observe(CommentObserver::class);
+        CommentLike::observe(CommentLikeObserver::class);
     }
 }

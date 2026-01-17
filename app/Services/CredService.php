@@ -7,6 +7,7 @@ use App\Models\CredTransaction;
 use App\Models\ScoringRule;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 class CredService
@@ -50,6 +51,7 @@ class CredService
             $this->updateUserTier($user);
 
             return CredTransaction::create([
+                'slug' => (string) Str::ulid(),
                 'user_id' => $user->id,
                 'action' => $action,
                 'amount' => $amount,
@@ -80,6 +82,7 @@ class CredService
             $this->updateUserTier($user);
 
             return CredTransaction::create([
+                'slug' => (string) Str::ulid(),
                 'user_id' => $user->id,
                 'action' => $action,
                 'amount' => $amount,

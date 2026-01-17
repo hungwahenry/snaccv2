@@ -1,6 +1,11 @@
 @props(['snacc'])
 
-<article class="border-b border-gray-200 dark:border-dark-border hover:bg-gray-50 dark:hover:bg-dark-bg/50 transition-colors">
+<article 
+    class="border-b border-gray-200 dark:border-dark-border hover:bg-gray-50 dark:hover:bg-dark-bg/50 transition-all duration-300"
+    @if($snacc->heat_tier)
+        style="box-shadow: inset 4px 0 0 0 {{ $snacc->heat_tier->color }}, inset 24px 0 20px -10px {{ $snacc->heat_tier->color }}20, 0 4px 20px -5px {{ $snacc->heat_tier->color }}15;"
+    @endif
+>
     <div class="px-4 py-3">
         <div class="flex gap-3">
             <!-- Avatar -->

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Str;
+use App\Models\HeatTier;
 
 class Snacc extends Model
 {
@@ -101,6 +102,11 @@ class Snacc extends Model
     public function isReportedBy(User $user): bool
     {
         return $this->reports()->where('user_id', $user->id)->exists();
+    }
+
+    public function getHeatTierAttribute(): ?HeatTier
+    {
+        return HeatTier::getTierForScore($this->heat_score);
     }
 
     // Scopes

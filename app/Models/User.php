@@ -29,6 +29,10 @@ class User extends Authenticatable
         'daily_cred_earned',
         'daily_cred_reset_date',
         'cred_tier_id',
+        'adds_count',
+        'added_by_count',
+        'posts_count',
+        'comments_count',
     ];
 
     /**

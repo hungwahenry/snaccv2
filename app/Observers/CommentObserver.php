@@ -3,9 +3,9 @@
 namespace App\Observers;
 
 use App\Models\Comment;
+use App\Models\User;
 use App\Services\CredService;
 use Illuminate\Support\Str;
-
 use App\Jobs\UpdateHeatScore;
 
 class CommentObserver
@@ -68,6 +68,9 @@ class CommentObserver
                 description: "Comment from @{$comment->user->profile->username}"
             );
         }
+
+        // Increment user's comments count
+        User::where('id', $comment->user_id)->increment('comments_count');
     }
 
     /**
@@ -90,5 +93,8 @@ class CommentObserver
                 UpdateHeatScore::dispatch($snacc);
             }
         }
+
+        // Decrement user's comments count
+        User::where('id', $comment->user_id)->decrement('comments_count');
     }
 }

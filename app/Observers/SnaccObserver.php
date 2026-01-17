@@ -3,8 +3,8 @@
 namespace App\Observers;
 
 use App\Models\Snacc;
+use App\Models\User;
 use App\Services\CredService;
-
 use App\Jobs\UpdateHeatScore;
 use Illuminate\Support\Str;
 
@@ -54,6 +54,9 @@ class SnaccObserver
             description: 'Created a new post'
         );
 
+        // Increment user's posts count
+        User::where('id', $snacc->user_id)->increment('posts_count');
+
         // Initialize heat calculation
         UpdateHeatScore::dispatch($snacc);
     }
@@ -88,5 +91,8 @@ class SnaccObserver
         if ($snacc->quoted_snacc_id) {
             Snacc::where('id', $snacc->quoted_snacc_id)->decrement('quotes_count');
         }
+
+        // Decrement user's posts count
+        User::where('id', $snacc->user_id)->decrement('posts_count');
     }
 }

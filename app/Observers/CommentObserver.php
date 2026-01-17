@@ -6,6 +6,8 @@ use App\Models\Comment;
 use App\Services\CredService;
 use Illuminate\Support\Str;
 
+use App\Jobs\UpdateHeatScore;
+
 class CommentObserver
 {
     public function __construct(
@@ -32,6 +34,12 @@ class CommentObserver
             // It's a reply
             $comment->parentComment()->increment('replies_count');
 
+            // Trigger heat update on the root snacc (replies count towards heat)
+            $rootSnacc = $comment->parentComment->snacc;
+            if ($rootSnacc) {
+                UpdateHeatScore::dispatch($rootSnacc);
+            }
+
             // Award cred to the parent comment author
             $parentComment = $comment->parentComment;
             if ($parentComment) {
@@ -45,6 +53,12 @@ class CommentObserver
         } else {
             // It's a top-level comment
             $comment->snacc()->increment('comments_count');
+
+            // Update Heat
+            $snacc = $comment->snacc;
+            if ($snacc) {
+                UpdateHeatScore::dispatch($snacc);
+            }
 
             // Award cred to the snacc author
             $this->credService->awardCred(
@@ -63,8 +77,18 @@ class CommentObserver
     {
         if ($comment->parent_comment_id) {
             $comment->parentComment()->decrement('replies_count');
+
+            $rootSnacc = $comment->parentComment->snacc;
+            if ($rootSnacc) {
+                UpdateHeatScore::dispatch($rootSnacc);
+            }
         } else {
             $comment->snacc()->decrement('comments_count');
+            
+            $snacc = $comment->snacc;
+            if ($snacc) {
+                UpdateHeatScore::dispatch($snacc);
+            }
         }
     }
 }

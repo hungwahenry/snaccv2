@@ -4,14 +4,14 @@ namespace App\Observers;
 
 use App\Models\Snacc;
 use App\Services\CredService;
-use App\Services\HeatService;
+
+use App\Jobs\UpdateHeatScore;
 use Illuminate\Support\Str;
 
 class SnaccObserver
 {
     public function __construct(
-        protected CredService $credService,
-        protected HeatService $heatService
+        protected CredService $credService
     ) {}
 
     /**
@@ -55,7 +55,7 @@ class SnaccObserver
         );
 
         // Initialize heat calculation
-        $this->heatService->updateHeat($snacc);
+        UpdateHeatScore::dispatch($snacc);
     }
 
     /**
@@ -65,17 +65,7 @@ class SnaccObserver
     {
         // Recalculate heat when engagement changes
         if ($snacc->wasChanged(['likes_count', 'comments_count', 'quotes_count', 'views_count'])) {
-            $this->heatService->updateHeat($snacc);
-
-            // Award viral bonus if heat reaches 1000+
-            if ($snacc->heat_score >= 1000 && $snacc->getOriginal('heat_score') < 1000) {
-                $this->credService->awardCred(
-                    user: $snacc->user,
-                    action: 'viral_bonus',
-                    source: $snacc,
-                    description: "Post went viral with {$snacc->heat_score} heat"
-                );
-            }
+            UpdateHeatScore::dispatch($snacc);
         }
 
         // Deduct cred if post is soft-deleted

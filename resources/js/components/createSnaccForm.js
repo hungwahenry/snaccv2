@@ -3,7 +3,7 @@ export default () => ({
     images: [],
     previews: [],
     selectedGif: null,
-    visibility: 'campus',
+    visibility: 'global',
     loading: false,
     error: '',
     quotedSnaccSlug: null,

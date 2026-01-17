@@ -25,6 +25,9 @@
             <time class="text-xs text-gray-500 dark:text-gray-400 lowercase">
                 {{ $comment->created_at->diffForHumans(short: true) }}
             </time>
+            <div class="ml-auto">
+                <x-comments.menu :comment="$comment" />
+            </div>
         </div>
 
         <!-- Replied To User -->

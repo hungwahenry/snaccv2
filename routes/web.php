@@ -19,6 +19,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+require __DIR__.'/auth.php';
+
 Route::get('/home', [HomeController::class, 'index'])->middleware(['auth', 'verified'])->name('home');
 Route::get('/explore', [ExploreController::class, 'index'])->middleware(['auth', 'verified'])->name('explore');
 
@@ -52,8 +54,7 @@ Route::middleware('auth')->group(function () {
     // User Add System
     Route::post('/users/{user}/add', [UserAddController::class, 'store'])->name('users.add');
     Route::delete('/users/{user}/remove', [UserAddController::class, 'destroy'])->name('users.remove');
-    // Public Profile
-    Route::get('/{username}', [ProfileController::class, 'show'])->middleware(['auth'])->name('profile.show');
 });
 
-require __DIR__.'/auth.php';
+// Public Profile
+Route::get('/{username}', [ProfileController::class, 'show'])->middleware(['auth'])->name('profile.show');

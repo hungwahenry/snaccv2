@@ -24,7 +24,7 @@
                     required
                     autofocus
                     autocomplete="email"
-                    placeholder="you@university.edu"
+                    placeholder="you@email.com"
                     class="pl-12"
                 />
             </div>

@@ -18,11 +18,6 @@
     <body class="font-sans text-gray-900 dark:text-gray-100 antialiased">
         <div class="min-h-screen flex flex-col justify-between bg-white dark:bg-dark-bg px-6 py-8 sm:px-8 sm:py-12">
             <div class="flex-1 flex flex-col justify-center w-full max-w-md mx-auto">
-                <div class="mb-12 text-center">
-                    <a href="/" class="inline-block">
-                        <x-application-logo class="w-16 h-16 sm:w-20 sm:h-20 fill-current text-primary-500" />
-                    </a>
-                </div>
 
                 <div class="w-full">
                     {{ $slot }}

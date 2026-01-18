@@ -29,6 +29,14 @@ class UserAddController extends Controller
             'added_user_id' => $user->id
         ]);
 
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'is_added' => true,
+                'added_by_count' => $user->fresh()->added_by_count
+            ]);
+        }
+
         return back();
     }
 
@@ -41,6 +49,14 @@ class UserAddController extends Controller
         Gate::authorize('delete', $userAdd);
 
         $userAdd->delete();
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'is_added' => false,
+                'added_by_count' => $user->fresh()->added_by_count
+            ]);
+        }
 
         return back();
     }

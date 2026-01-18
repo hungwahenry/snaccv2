@@ -27,9 +27,8 @@
             <span x-show="showAllReplies" x-cloak>hide replies</span>
         </button>
 
-        <!-- Load more replies content (loaded via AJAX when clicked) -->
+        <!-- Load more replies content -->
         <div x-show="showAllReplies" x-cloak class="mt-3 space-y-3">
-            <!-- TODO: Load additional replies via AJAX -->
         </div>
     @endif
 </div>

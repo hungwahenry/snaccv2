@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\ScoringRule;
 use App\Models\Snacc;
+use App\Notifications\SnaccActivityNotification;
 use Illuminate\Support\Facades\DB;
 
 class HeatService
@@ -45,12 +46,20 @@ class HeatService
 
             // Check for viral bonus (1000+ heat)
             if ($newHeat >= 1000 && $oldHeat < 1000) {
+                // Award Cred
                 $this->credService->awardCred(
                     user: $snacc->user,
                     action: 'viral_bonus',
                     source: $snacc,
                     description: "Post went viral with {$newHeat} heat"
                 );
+
+                // Notify User
+                $snacc->user->notify(new SnaccActivityNotification(
+                    type: 'viral',
+                    source: $snacc,
+                    actor: null // System notification
+                ));
             }
         });
     }

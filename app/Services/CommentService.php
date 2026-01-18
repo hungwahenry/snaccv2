@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Comment;
 use App\Models\Snacc;
+use App\Models\User;
+use App\Notifications\SnaccActivityNotification;
 
 class CommentService
 {
@@ -29,7 +31,31 @@ class CommentService
             'content' => $content,
             'gif_url' => $gifUrl,
             'parent_comment_id' => $parentCommentId,
+            'parent_comment_id' => $parentCommentId,
         ]);
+
+        $actor = User::find($userId);
+        $snacc = Snacc::find($snaccId);
+
+        // Notify Snacc Owner (if comment and not self)
+        if (!$parentCommentId && $snacc && $snacc->user_id !== $userId) {
+            $snacc->user->notify(new SnaccActivityNotification(
+                type: 'comment',
+                source: $comment,
+                actor: $actor
+            ));
+        }
+
+        // Notify Parent Comment Owner (if reply and not self)
+        if ($parentCommentId && isset($parentComment) && $parentComment->user_id !== $userId) {
+            $parentComment->user->notify(new SnaccActivityNotification(
+                type: 'reply',
+                source: $comment,
+                actor: $actor
+            ));
+        }
+
+        return $comment;
     }
 
     /**

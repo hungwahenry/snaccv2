@@ -16,6 +16,29 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
+     * Get the notification settings for the user.
+     */
+    public function settings(): HasMany
+    {
+        return $this->hasMany(UserNotificationSetting::class);
+    }
+
+    /**
+     * Check if user wants a specific notification type on a channel.
+     * Defaults to true if no setting exists.
+     */
+    public function wantsNotification(string $type, string $channel): bool
+    {
+        // Cache could be added here later
+        $setting = $this->settings()
+            ->where('type', $type)
+            ->where('channel', $channel)
+            ->first();
+
+        return $setting ? $setting->is_enabled : true;
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>

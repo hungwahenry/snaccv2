@@ -7,27 +7,23 @@ use App\Models\UserAdd;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
+use App\Services\UserAddService;
+
 class UserAddController extends Controller
 {
+    public function __construct(
+        protected UserAddService $userAddService
+    ) {}
     public function store(Request $request, User $user)
     {
         // Authorize basic create permission
         Gate::authorize('create', UserAdd::class);
         
-        // Additional validation: cannot add yourself and must not already be added
-        if ($request->user()->id === $user->id) {
-            abort(403, 'Cannot add yourself');
+        try {
+            $this->userAddService->addUser($request->user(), $user);
+        } catch (\InvalidArgumentException $e) {
+            abort(403, $e->getMessage());
         }
-
-        $alreadyAdded = $request->user()->addedUsers()->where('added_user_id', $user->id)->exists();
-        if ($alreadyAdded) {
-            abort(403, 'User already added');
-        }
-
-        UserAdd::firstOrCreate([
-            'user_id' => $request->user()->id,
-            'added_user_id' => $user->id
-        ]);
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -42,13 +38,7 @@ class UserAddController extends Controller
 
     public function destroy(Request $request, User $user)
     {
-        $userAdd = UserAdd::where('user_id', $request->user()->id)
-                          ->where('added_user_id', $user->id)
-                          ->firstOrFail();
-
-        Gate::authorize('delete', $userAdd);
-
-        $userAdd->delete();
+        $this->userAddService->removeUser($request->user(), $user);
 
         if ($request->wantsJson()) {
             return response()->json([

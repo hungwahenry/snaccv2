@@ -40,12 +40,19 @@
         </button>
 
         <!-- Notifications -->
-        <a href="#" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400 transition-colors group relative">
+        <a href="{{ route('notifications.index') }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('notifications*') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group relative">
             <div class="relative">
-                <x-solar-bell-linear class="w-7 h-7" />
-                <span class="absolute top-0 right-0 lg:top-0 lg:right-0 w-2.5 h-2.5 bg-primary-500 rounded-full border-2 border-white dark:border-dark-surface"></span>
+                @if(request()->routeIs('notifications*'))
+                    <x-solar-bell-bold class="w-7 h-7" />
+                @else
+                    <x-solar-bell-linear class="w-7 h-7" />
+                @endif
+                
+                @if(auth()->user()->unreadNotifications()->exists())
+                    <span class="absolute top-0 right-0 lg:top-0 lg:right-0 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white dark:border-dark-surface"></span>
+                @endif
             </div>
-            <span class="hidden lg:block ml-4 text-base font-medium capitalize">notifications</span>
+            <span class="hidden lg:block ml-4 text-base {{ request()->routeIs('notifications*') ? 'font-bold' : 'font-medium' }} capitalize">notifications</span>
         </a>
 
         <!-- Profile -->

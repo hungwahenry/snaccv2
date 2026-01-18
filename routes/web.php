@@ -5,6 +5,7 @@ use App\Http\Controllers\CommentLikeController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\GiphyController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfileSettingsController;
@@ -54,6 +55,11 @@ Route::middleware('auth')->group(function () {
     // User Add System
     Route::post('/users/{user}/add', [UserAddController::class, 'store'])->name('users.add');
     Route::delete('/users/{user}/remove', [UserAddController::class, 'destroy'])->name('users.remove');
+
+    // Notifications
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
 });
 
 // Public Profile

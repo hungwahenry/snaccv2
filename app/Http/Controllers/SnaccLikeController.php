@@ -9,28 +9,15 @@ use Illuminate\Support\Facades\Gate;
 
 class SnaccLikeController extends Controller
 {
+    public function __construct(
+        protected \App\Services\LikeService $likeService
+    ) {}
+
     public function toggle(Snacc $snacc): JsonResponse
     {
-        $user = auth()->user();
-
-        $like = SnaccLike::where('snacc_id', $snacc->id)
-            ->where('user_id', $user->id)
-            ->first();
-
-        if ($like) {
-            // Unlike
-            Gate::authorize('delete', $like);
-            $like->delete();
-            $isLiked = false;
-        } else {
-            // Like
-            Gate::authorize('create', SnaccLike::class);
-            SnaccLike::create([
-                'snacc_id' => $snacc->id,
-                'user_id' => $user->id,
-            ]);
-            $isLiked = true;
-        }
+        $result = $this->likeService->toggleSnaccLike($snacc, auth()->user());
+        $isLiked = $result['is_liked'];
+        // $result['likes_count'] is also available if needed, but we refresh snacc below or use result directly
 
         // Refresh the snacc to get updated likes_count
         $snacc->refresh();

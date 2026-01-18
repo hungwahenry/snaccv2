@@ -2,10 +2,14 @@
 
 namespace App\Services;
 
+use App\Models\User;
+
 use App\Models\Snacc;
 use App\Models\SnaccImage;
+use App\Notifications\SnaccActivityNotification;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class SnaccService
@@ -48,6 +52,20 @@ class SnaccService
                 'gif_url' => $gifUrl,
                 'quoted_snacc_id' => $quotedSnaccId,
             ]);
+
+            // Notify quoted snacc owner (if quoted and not self-quote)
+            if ($quotedSnaccId) {
+                $quotedSnacc = Snacc::find($quotedSnaccId);
+                if ($quotedSnacc && $quotedSnacc->user_id !== $userId) {
+                if ($quotedSnacc && $quotedSnacc->user_id !== $userId) {
+                    $quotedSnacc->user->notify(new SnaccActivityNotification(
+                        type: 'quote',
+                        source: $snacc,
+                        actor: $snacc->user
+                    ));
+                }
+                }
+            }
 
             if (!empty($images)) {
                 $this->attachImages($snacc, $images);

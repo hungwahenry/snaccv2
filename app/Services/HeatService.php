@@ -117,8 +117,4 @@ class HeatService
         return $count;
     }
 
-    public function incrementView(Snacc $snacc): void
-    {
-        $snacc->increment('views_count');
-    }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Snacc;
 use App\Services\CommentService;
+use App\Services\ViewService;
 use App\Services\HeatService;
 use App\Jobs\UpdateHeatScore;
 use App\Traits\RendersCommentHtml;
@@ -16,13 +17,13 @@ class SnaccViewController extends Controller
 
     public function __construct(
         protected CommentService $commentService,
-        protected HeatService $heatService
+        protected ViewService $viewService
     ) {}
 
     public function show(Snacc $snacc): View
     {
-        // Track view for heat
-        $this->heatService->incrementView($snacc);
+        // Track unique view
+        $this->viewService->recordView($snacc);
         UpdateHeatScore::dispatchAfterResponse($snacc);
 
         // Load the snacc with all necessary relationships

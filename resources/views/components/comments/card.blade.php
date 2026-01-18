@@ -6,21 +6,21 @@
     <div class="px-4 py-3">
         <div class="flex gap-3">
             <!-- Avatar -->
-            <div class="flex-shrink-0">
+            <a href="{{ route('profile.show', $comment->user->profile->username) }}" class="flex-shrink-0">
                 <img
                     src="{{ $comment->user->profile->profile_photo ? Storage::url($comment->user->profile->profile_photo) : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' . urlencode($comment->user->profile->username) }}"
                     alt="{{ $comment->user->profile->username }}"
                     class="w-10 h-10 rounded-full object-cover"
                 >
-            </div>
+            </a>
 
             <!-- Content -->
             <div class="flex-1 min-w-0">
                 <!-- Header -->
                 <div class="flex items-center gap-1.5 mb-1">
-                    <span class="font-semibold text-sm text-gray-900 dark:text-white lowercase">
+                    <a href="{{ route('profile.show', $comment->user->profile->username) }}" class="font-semibold text-sm text-gray-900 dark:text-white lowercase hover:underline">
                         {{ $comment->user->profile->username }}
-                    </span>
+                    </a>
                     <span class="text-gray-400 dark:text-gray-500 text-xs">·</span>
                     <span class="text-xs text-gray-500 dark:text-gray-400 lowercase">
                         {{ $comment->user->profile->university?->acronym }}
@@ -37,7 +37,7 @@
                 <!-- Replied To User (if this is a reply) -->
                 @if($comment->replied_to_user_id && $comment->repliedToUser)
                     <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">
-                        replying to <span class="text-primary-600 dark:text-primary-400 lowercase">{{ '@' . $comment->repliedToUser->profile->username }}</span>
+                        replying to <a href="{{ route('profile.show', $comment->repliedToUser->profile->username) }}" class="text-primary-600 dark:text-primary-400 lowercase hover:underline">{{ '@' . $comment->repliedToUser->profile->username }}</a>
                     </div>
                 @endif
 

@@ -12,7 +12,7 @@ class ExploreController extends Controller
     {
         $sort = $request->query('sort', 'trending');
 
-        // Global feed: all non-deleted snaccs
+        // Global feed: all non-deleted snaccs with global visibility
         $query = Snacc::with([
             'user.profile',
             'university',
@@ -20,7 +20,9 @@ class ExploreController extends Controller
             'vibetags',
             'quotedSnacc.user.profile',
             'quotedSnacc.images'
-        ])->notDeleted();
+        ])
+        ->notDeleted()
+        ->global();
 
         // Sorting logic
         if ($sort === 'trending') {
@@ -28,7 +30,7 @@ class ExploreController extends Controller
         } elseif ($sort === 'added') {
             $user = $request->user();
             if ($user) {
-                $query->whereIn('user_id', $user->addedUsers()->pluck('id'))
+                $query->whereIn('user_id', $user->addedUsers()->pluck('users.id'))
                       ->latest();
             } else {
                 $query->whereRaw('0 = 1');

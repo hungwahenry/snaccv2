@@ -128,4 +128,8 @@ class Snacc extends Model
         return $query->where('is_deleted', false);
     }
 
+    public function scopeGlobal($query)
+    {
+        return $query->where('visibility', 'global');
+    }
 }

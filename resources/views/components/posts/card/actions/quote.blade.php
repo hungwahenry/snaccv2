@@ -12,7 +12,7 @@
             detail: {
                 slug: '{{ $snacc->slug }}',
                 user: {
-                    name: '{{ $snacc->user->name }}',
+                    name: '{{ $snacc->user->profile->username }}',
                     username: '{{ $snacc->user->profile->username }}',
                     avatar: '{{ $snacc->user->profile->profile_photo ? Storage::url($snacc->user->profile->profile_photo) : '' }}'
                 },

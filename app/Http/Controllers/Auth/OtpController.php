@@ -82,10 +82,8 @@ class OtpController extends Controller
         $isNewUser = !$user;
 
         if ($isNewUser) {
-            // Create user with temporary name (will be updated in onboarding)
             $user = User::create([
                 'email' => $email,
-                'name' => explode('@', $email)[0], // Temporary
             ]);
 
             event(new Registered($user));

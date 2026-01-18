@@ -27,4 +27,11 @@
              @endif
         </div>
     </div>
+
+    <!-- Report User Modal -->
+    <x-reports.modal
+        modalName="report-user-modal"
+        reportableType="user"
+        :reportableSlug="$user->profile->username"
+    />
 </x-app-layout>

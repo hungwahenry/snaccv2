@@ -49,9 +49,9 @@
     <a href="{{ route($route, ['sort' => 'added']) }}" 
        class="flex items-center gap-2 text-sm font-medium transition-colors {{ $sort === 'added' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200' }}">
         @if($sort === 'added')
-            <x-solar-users-group-rounded-bold class="w-5 h-5" />
+            <x-solar-heart-bold class="w-5 h-5" />
         @else
-            <x-solar-users-group-rounded-linear class="w-5 h-5" />
+            <x-solar-heart-linear class="w-5 h-5" />
         @endif
         <span>added</span>
     </a>

@@ -1,12 +1,18 @@
 @props(['user', 'profile', 'isOwnProfile', 'isAdded'])
 
-<div class="px-4 py-8 bg-white dark:bg-dark-bg border-b border-gray-200 dark:border-dark-border"
+<div class="px-4 py-8 bg-white dark:bg-dark-bg border-b border-gray-200 dark:border-dark-border relative"
      style="background-image: radial-gradient(circle at 50% 0%, {{ $user->credTier->color ?? '#ffffff' }}15 0%, transparent 70%);">
+    
+    <!-- Profile Menu (Report etc) -->
+    <div class="absolute top-4 right-4">
+        <x-profile.menu :user="$user" />
+    </div>
+
     <div class="flex flex-col items-center text-center gap-4">
         <!-- 1. Profile Photo -->
         <img 
-            src="{{ $profile->profile_photo ? Storage::url($profile->profile_photo) : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' . urlencode($user->name) }}" 
-            alt="{{ $user->name }}" 
+            src="{{ $profile->profile_photo ? Storage::url($profile->profile_photo) : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' . urlencode($profile->username) }}" 
+            alt="{{ $profile->username }}" 
             class="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-dark-bg bg-gray-50 dark:bg-dark-surface" 
         />
 

@@ -11,8 +11,8 @@
             <!-- Avatar -->
             <div class="flex-shrink-0">
                 <img
-                    src="{{ $snacc->user->profile->profile_photo ? Storage::url($snacc->user->profile->profile_photo) : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' . urlencode($snacc->user->name) }}"
-                    alt="{{ $snacc->user->name }}"
+                    src="{{ $snacc->user->profile->profile_photo ? Storage::url($snacc->user->profile->profile_photo) : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' . urlencode($snacc->user->profile->username) }}"
+                    alt="{{ $snacc->user->profile->username }}"
                     class="w-10 h-10 rounded-full object-cover"
                 >
             </div>

@@ -30,7 +30,7 @@ class HomeController extends Controller
             $query->trending();
         } elseif ($sort === 'added') {
             // Only posts from users I've added
-            $query->whereIn('user_id', $user->addedUsers()->pluck('id'))
+            $query->whereIn('user_id', $user->addedUsers()->pluck('users.id'))
                   ->latest();
         } else {
             $query->latest();

@@ -4,8 +4,8 @@
     <!-- Avatar (smaller) -->
     <div class="flex-shrink-0">
         <img
-            src="{{ $comment->user->profile->profile_photo ? Storage::url($comment->user->profile->profile_photo) : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' . urlencode($comment->user->name) }}"
-            alt="{{ $comment->user->name }}"
+            src="{{ $comment->user->profile->profile_photo ? Storage::url($comment->user->profile->profile_photo) : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' . urlencode($comment->user->profile->username) }}"
+            alt="{{ $comment->user->profile->username }}"
             class="w-8 h-8 rounded-full object-cover"
         >
     </div>

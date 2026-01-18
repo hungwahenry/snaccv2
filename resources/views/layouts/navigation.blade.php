@@ -49,13 +49,13 @@
         </a>
 
         <!-- Profile -->
-        <a href="{{ route('profile.show', auth()->user()->profile->username) }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('profile.*') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group">
+        <a href="{{ route('profile.show', auth()->user()->profile->username) }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('profile.show') && request()->route('username') === auth()->user()->profile->username ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group">
             <img 
                 src="{{ auth()->user()->profile?->profile_photo ? Storage::url(auth()->user()->profile->profile_photo) : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' . urlencode(auth()->user()->name) }}" 
                 alt="Profile" 
-                class="w-7 h-7 rounded-full object-cover border-2 {{ request()->routeIs('profile.*') ? 'border-primary-500' : 'border-transparent' }}" 
+                class="w-7 h-7 rounded-full object-cover border-2 {{ request()->routeIs('profile.show') && request()->route('username') === auth()->user()->profile->username ? 'border-primary-500' : 'border-transparent' }}" 
             />
-            <span class="hidden lg:block ml-4 text-base {{ request()->routeIs('profile.*') ? 'font-bold' : 'font-medium' }} capitalize">profile</span>
+            <span class="hidden lg:block ml-4 text-base {{ request()->routeIs('profile.show') && request()->route('username') === auth()->user()->profile->username ? 'font-bold' : 'font-medium' }} capitalize">profile</span>
         </a>
 
         <!-- Logout - Desktop Only, at bottom -->

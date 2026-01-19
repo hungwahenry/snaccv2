@@ -2,7 +2,9 @@
 
 namespace App\Notifications;
 
+use App\Enums\NotificationType;
 use App\Models\User;
+use App\Services\NotificationGrouper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -18,6 +20,19 @@ class UserAdded extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
+        $grouper = app(NotificationGrouper::class);
+        $existingNotification = $grouper->findGroupableNotification(
+            $notifiable,
+            NotificationType::ADD->value,
+            $this->adder->id,
+            'User'
+        );
+
+        if ($existingNotification) {
+            $grouper->updateGroupedNotification($existingNotification, $this->adder, NotificationType::ADD->value);
+            return [];
+        }
+
         $channels = [];
 
         if ($notifiable->wantsNotification('add', 'database')) {
@@ -41,13 +56,22 @@ class UserAdded extends Notification implements ShouldQueue
 
     public function toArray(object $notifiable): array
     {
+        $grouper = app(NotificationGrouper::class);
+
         return [
-            'type' => 'add',
+            'type' => NotificationType::ADD->value,
             'source_id' => $this->adder->id,
-            'source_type' => 'User', 
-            'actor_id' => $this->adder->id,
-            'actor_name' => $this->adder->profile->username,
-            'actor_avatar' => $this->adder->profile->profile_photo,
+            'source_type' => 'User',
+            'notification_group_key' => $grouper->generateGroupKey(NotificationType::ADD->value, 'User', $this->adder->id),
+            'actors' => [
+                [
+                    'id' => $this->adder->id,
+                    'name' => $this->adder->profile->username,
+                    'avatar' => $this->adder->profile->profile_photo,
+                    'acted_at' => now()->toIso8601String(),
+                ]
+            ],
+            'total_count' => 1,
             'message' => "{$this->adder->profile->username} added you to their list.",
             'url' => route('profile.show', $this->adder->profile->username),
         ];

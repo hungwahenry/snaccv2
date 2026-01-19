@@ -26,12 +26,11 @@ class CommentService
             $parentCommentId = $parentComment?->id;
         }
 
-        return Comment::create([
+        $comment = Comment::create([
             'snacc_id' => $snaccId,
             'user_id' => $userId,
             'content' => $content,
             'gif_url' => $gifUrl,
-            'parent_comment_id' => $parentCommentId,
             'parent_comment_id' => $parentCommentId,
         ]);
 

@@ -42,13 +42,13 @@ class SnaccViral extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            'type' => 'viral',
+            'type' => \App\Enums\NotificationType::VIRAL->value,
             'source_id' => $this->snacc->id,
             'source_type' => 'Snacc',
             'actor_id' => null, // System notification
-            'actor_name' => 'Snacc System',
-            'actor_avatar' => null, // Could use system logo
-            'message' => "Your snacc is going viral! It has reached 1000+ heat.",
+            'actor_name' => 'Snacc Viral',
+            'actor_avatar' => null,
+            'message' => "Your snacc is going viral! 🔥",
             'url' => route('snaccs.show', $this->snacc),
         ];
     }

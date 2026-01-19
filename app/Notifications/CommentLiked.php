@@ -2,8 +2,10 @@
 
 namespace App\Notifications;
 
+use App\Enums\NotificationType;
 use App\Models\Comment;
 use App\Models\User;
+use App\Services\NotificationGrouper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -20,10 +22,22 @@ class CommentLiked extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
+        // Check for groupable notification first
+        $grouper = app(NotificationGrouper::class);
+        $existingNotification = $grouper->findGroupableNotification(
+            $notifiable,
+            NotificationType::LIKE->value,
+            $this->comment->snacc_id,
+            'Snacc'
+        );
+
+        if ($existingNotification) {
+            $grouper->updateGroupedNotification($existingNotification, $this->liker, NotificationType::LIKE->value);
+            return [];
+        }
+
         $channels = [];
 
-        // Using generic 'like' preference since we probably don't have 'comment_like' preference yet, 
-        // or we could fallback to it. Let's use 'like' for simplicity as discussed.
         if ($notifiable->wantsNotification('like', 'database')) {
             $channels[] = 'database';
         }
@@ -45,13 +59,22 @@ class CommentLiked extends Notification implements ShouldQueue
 
     public function toArray(object $notifiable): array
     {
+        $grouper = app(NotificationGrouper::class);
+
         return [
-            'type' => 'like',
+            'type' => NotificationType::LIKE->value,
             'source_id' => $this->comment->snacc_id,
             'source_type' => 'Snacc',
-            'actor_id' => $this->liker->id,
-            'actor_name' => $this->liker->profile->username,
-            'actor_avatar' => $this->liker->profile->profile_photo,
+            'notification_group_key' => $grouper->generateGroupKey(NotificationType::LIKE->value, 'Snacc', $this->comment->snacc_id),
+            'actors' => [
+                [
+                    'id' => $this->liker->id,
+                    'name' => $this->liker->profile->username,
+                    'avatar' => $this->liker->profile->profile_photo,
+                    'acted_at' => now()->toIso8601String(),
+                ]
+            ],
+            'total_count' => 1,
             'message' => "{$this->liker->profile->username} liked your comment.",
             'url' => route('snaccs.show', $this->comment->snacc_id),
         ];

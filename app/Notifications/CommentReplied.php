@@ -2,8 +2,10 @@
 
 namespace App\Notifications;
 
+use App\Enums\NotificationType;
 use App\Models\Comment;
 use App\Models\User;
+use App\Services\NotificationGrouper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -20,6 +22,19 @@ class CommentReplied extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
+        $grouper = app(NotificationGrouper::class);
+        $existingNotification = $grouper->findGroupableNotification(
+            $notifiable,
+            NotificationType::REPLY->value,
+            $this->reply->snacc_id,
+            'Snacc'
+        );
+
+        if ($existingNotification) {
+            $grouper->updateGroupedNotification($existingNotification, $this->replier, NotificationType::REPLY->value);
+            return [];
+        }
+
         $channels = [];
 
         if ($notifiable->wantsNotification('reply', 'database')) {
@@ -43,13 +58,22 @@ class CommentReplied extends Notification implements ShouldQueue
 
     public function toArray(object $notifiable): array
     {
+        $grouper = app(NotificationGrouper::class);
+
         return [
-            'type' => 'reply',
+            'type' => NotificationType::REPLY->value,
             'source_id' => $this->reply->snacc_id,
             'source_type' => 'Snacc',
-            'actor_id' => $this->replier->id,
-            'actor_name' => $this->replier->profile->username,
-            'actor_avatar' => $this->replier->profile->profile_photo,
+            'notification_group_key' => $grouper->generateGroupKey(NotificationType::REPLY->value, 'Snacc', $this->reply->snacc_id),
+            'actors' => [
+                [
+                    'id' => $this->replier->id,
+                    'name' => $this->replier->profile->username,
+                    'avatar' => $this->replier->profile->profile_photo,
+                    'acted_at' => now()->toIso8601String(),
+                ]
+            ],
+            'total_count' => 1,
             'message' => "{$this->replier->profile->username} replied to your comment.",
             'url' => route('snaccs.show', $this->reply->snacc_id),
         ];

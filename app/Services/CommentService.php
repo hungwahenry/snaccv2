@@ -5,7 +5,8 @@ namespace App\Services;
 use App\Models\Comment;
 use App\Models\Snacc;
 use App\Models\User;
-use App\Notifications\SnaccActivityNotification;
+use App\Notifications\CommentReplied;
+use App\Notifications\SnaccCommented;
 
 class CommentService
 {
@@ -39,20 +40,12 @@ class CommentService
 
         // Notify Snacc Owner (if comment and not self)
         if (!$parentCommentId && $snacc && $snacc->user_id !== $userId) {
-            $snacc->user->notify(new SnaccActivityNotification(
-                type: 'comment',
-                source: $comment,
-                actor: $actor
-            ));
+            $snacc->user->notify(new SnaccCommented($comment, $actor));
         }
 
         // Notify Parent Comment Owner (if reply and not self)
         if ($parentCommentId && isset($parentComment) && $parentComment->user_id !== $userId) {
-            $parentComment->user->notify(new SnaccActivityNotification(
-                type: 'reply',
-                source: $comment,
-                actor: $actor
-            ));
+            $parentComment->user->notify(new CommentReplied($comment, $actor));
         }
 
         return $comment;

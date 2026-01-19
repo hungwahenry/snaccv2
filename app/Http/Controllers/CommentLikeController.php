@@ -3,42 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
-use App\Models\CommentLike;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Gate;
 
+use App\Services\LikeService;
+
 class CommentLikeController extends Controller
 {
+    public function __construct(
+        protected LikeService $likeService
+    ) {}
+
     public function toggle(Comment $comment): JsonResponse
     {
-        $user = auth()->user();
-
-        $like = CommentLike::where('comment_id', $comment->id)
-            ->where('user_id', $user->id)
-            ->first();
-
-        if ($like) {
-            // Unlike
-            Gate::authorize('delete', $like);
-            $like->delete();
-            $isLiked = false;
-        } else {
-            // Like
-            Gate::authorize('create', CommentLike::class);
-            CommentLike::create([
-                'comment_id' => $comment->id,
-                'user_id' => $user->id,
-            ]);
-            $isLiked = true;
-        }
-
-        // Refresh the comment to get updated likes_count
-        $comment->refresh();
-
+        $result = $this->likeService->toggleCommentLike($comment, auth()->user());
+        
         return response()->json([
             'success' => true,
-            'is_liked' => $isLiked,
-            'likes_count' => $comment->likes_count,
+            'is_liked' => $result['is_liked'],
+            'likes_count' => $result['likes_count'],
         ]);
     }
 }

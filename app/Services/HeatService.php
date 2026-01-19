@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\ScoringRule;
 use App\Models\Snacc;
-use App\Notifications\SnaccActivityNotification;
+use App\Notifications\SnaccViral;
 use Illuminate\Support\Facades\DB;
 
 class HeatService
@@ -55,11 +55,7 @@ class HeatService
                 );
 
                 // Notify User
-                $snacc->user->notify(new SnaccActivityNotification(
-                    type: 'viral',
-                    source: $snacc,
-                    actor: null // System notification
-                ));
+                $snacc->user->notify(new SnaccViral($snacc));
             }
         });
     }

@@ -6,7 +6,7 @@ use App\Models\User;
 
 use App\Models\Snacc;
 use App\Models\SnaccImage;
-use App\Notifications\SnaccActivityNotification;
+use App\Notifications\SnaccQuoted;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -58,11 +58,9 @@ class SnaccService
                 $quotedSnacc = Snacc::find($quotedSnaccId);
                 if ($quotedSnacc && $quotedSnacc->user_id !== $userId) {
                 if ($quotedSnacc && $quotedSnacc->user_id !== $userId) {
-                    $quotedSnacc->user->notify(new SnaccActivityNotification(
-                        type: 'quote',
-                        source: $snacc,
-                        actor: $snacc->user
-                    ));
+                if ($quotedSnacc && $quotedSnacc->user_id !== $userId) {
+                    $quotedSnacc->user->notify(new SnaccQuoted($snacc, $snacc->user));
+                }
                 }
                 }
             }

@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Models\UserAdd;
-use App\Notifications\SnaccActivityNotification;
+use App\Notifications\UserAdded;
 use Illuminate\Support\Facades\Gate;
 
 class UserAddService
@@ -27,11 +27,7 @@ class UserAddService
         ]);
 
         // Notify
-        $target->notify(new SnaccActivityNotification(
-            type: 'add',
-            source: $target,
-            actor: $actor
-        ));
+        $target->notify(new UserAdded($actor));
 
         return [
             'success' => true,

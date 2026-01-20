@@ -14,12 +14,8 @@
         </div>
 
         <div class="bg-white dark:bg-dark-bg rounded-xl border border-gray-200 dark:border-dark-border overflow-hidden">
-            @inject('renderer', 'App\Services\NotificationRenderer')
             @forelse ($notifications as $notification)
-                @php
-                    $rendered = $renderer->render($notification);
-                @endphp
-                <x-notifications.notification-card :rendered="$rendered" />
+                <x-notifications.notification-card :notification="$notification" />
             @empty
                 <div class="text-center py-12">
                     <div class="w-16 h-16 bg-gray-100 dark:bg-dark-bg rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400">

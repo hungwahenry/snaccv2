@@ -44,28 +44,25 @@ class SnaccViral extends Notification implements ShouldQueue
         // System notification, no grouping needed but we must provide standard structure
         return [
             'notification_group_key' => null,
-            'actor_count' => 0,
-            'data' => [
-                'type' => \App\Enums\NotificationType::VIRAL->value,
-                'source_id' => $this->snacc->id,
-                'source_type' => 'Snacc',
-                'actors' => [
-                    [
-                        'id' => null,
-                        'name' => 'Snacc Viral',
-                        'avatar' => null, // Or a system icon path
-                        'acted_at' => now()->toIso8601String(),
-                    ]
-                ],
-                'total_count' => 1,
-                'message' => "Your snacc is going viral! 🔥",
-                'url' => route('snaccs.show', $this->snacc->slug),
+            'type' => 'viral',
+            'source_id' => $this->snacc->id,
+            'source_type' => 'Snacc',
+            'actors' => [
+                [
+                    'id' => null,
+                    'name' => 'System',
+                    'avatar' => null, 
+                    'acted_at' => now()->toIso8601String(),
+                ]
             ],
+            'total_count' => 1,
+            'message' => "Your snacc is going viral! 🔥",
+            'url' => route('snaccs.show', $this->snacc->slug),
         ];
     }
 
     public function toArray(object $notifiable): array
     {
-        return $this->toDatabase($notifiable)['data'];
+        return $this->toDatabase($notifiable);
     }
 }

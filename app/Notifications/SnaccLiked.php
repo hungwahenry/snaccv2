@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Enums\NotificationType;
+
 use App\Models\Snacc;
 use App\Models\User;
 use App\Services\NotificationGrouper;
@@ -26,14 +26,14 @@ class SnaccLiked extends Notification implements ShouldQueue
         $grouper = app(NotificationGrouper::class);
         $existingNotification = $grouper->findGroupableNotification(
             $notifiable,
-            NotificationType::LIKE->value,
+            'like',
             $this->snacc->id,
             'Snacc'
         );
 
         if ($existingNotification) {
             // Update existing notification instead of creating new one
-            $grouper->updateGroupedNotification($existingNotification, $this->liker, NotificationType::LIKE->value);
+            $grouper->updateGroupedNotification($existingNotification, $this->liker, 'like');
             return []; // Don't send new notification
         }
 
@@ -62,11 +62,11 @@ class SnaccLiked extends Notification implements ShouldQueue
     public function toDatabase(object $notifiable): array
     {
         $grouper = app(NotificationGrouper::class);
-        $groupKey = $grouper->generateGroupKey(NotificationType::LIKE->value, 'Snacc', $this->snacc->id);
+        $groupKey = $grouper->generateGroupKey('like', 'Snacc', $this->snacc->id);
         
         return [
             'notification_group_key' => $groupKey,
-            'type' => NotificationType::LIKE->value,
+            'type' => 'like',
             'source_id' => $this->snacc->id,
             'source_type' => 'Snacc',
             'actors' => [

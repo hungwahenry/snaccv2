@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Enums\NotificationType;
+
 use App\Models\User;
 use App\Services\NotificationGrouper;
 use Illuminate\Bus\Queueable;
@@ -21,13 +21,13 @@ class UserAdded extends Notification implements ShouldQueue
         $grouper = app(NotificationGrouper::class);
         $existingNotification = $grouper->findGroupableNotification(
             $notifiable,
-            NotificationType::ADD->value,
+            'add',
             $this->adder->id,
             'User'
         );
 
         if ($existingNotification) {
-            $grouper->updateGroupedNotification($existingNotification, $this->adder, NotificationType::ADD->value);
+            $grouper->updateGroupedNotification($existingNotification, $this->adder, 'add');
             return [];
         }
 
@@ -55,11 +55,11 @@ class UserAdded extends Notification implements ShouldQueue
     public function toDatabase(object $notifiable): array
     {
         $grouper = app(NotificationGrouper::class);
-        $groupKey = $grouper->generateGroupKey(NotificationType::ADD->value, 'User', $this->adder->id);
+        $groupKey = $grouper->generateGroupKey('add', 'User', $this->adder->id);
         
         return [
             'notification_group_key' => $groupKey,
-            'type' => NotificationType::ADD->value,
+            'type' => 'add',
             'source_id' => $this->adder->id,
             'source_type' => 'User',
             'actors' => [

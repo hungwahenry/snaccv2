@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Enums\NotificationType;
+
 use App\Models\Comment;
 use App\Models\User;
 use App\Services\NotificationGrouper;
@@ -26,13 +26,13 @@ class CommentLiked extends Notification implements ShouldQueue
         $grouper = app(NotificationGrouper::class);
         $existingNotification = $grouper->findGroupableNotification(
             $notifiable,
-            NotificationType::LIKE->value,
+            'like',
             $this->comment->snacc_id,
             'Snacc'
         );
 
         if ($existingNotification) {
-            $grouper->updateGroupedNotification($existingNotification, $this->liker, NotificationType::LIKE->value);
+            $grouper->updateGroupedNotification($existingNotification, $this->liker, 'like');
             return [];
         }
 
@@ -60,11 +60,11 @@ class CommentLiked extends Notification implements ShouldQueue
     public function toDatabase(object $notifiable): array
     {
         $grouper = app(NotificationGrouper::class);
-        $groupKey = $grouper->generateGroupKey(NotificationType::LIKE->value, 'Snacc', $this->comment->snacc_id);
+        $groupKey = $grouper->generateGroupKey('like', 'Snacc', $this->comment->snacc_id);
         
         return [
             'notification_group_key' => $groupKey,
-            'type' => NotificationType::LIKE->value,
+            'type' => 'like',
             'source_id' => $this->comment->snacc_id,
             'source_type' => 'Snacc',
             'actors' => [

@@ -43,9 +43,9 @@
         <a href="{{ route('notifications.index') }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('notifications*') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group relative">
             <div class="relative">
                 @if(request()->routeIs('notifications*'))
-                    <x-solar-bell-bold class="w-7 h-7" />
+                    <x-solar-hand-shake-bold class="w-7 h-7" />
                 @else
-                    <x-solar-bell-linear class="w-7 h-7" />
+                    <x-solar-hand-shake-linear class="w-7 h-7" />
                 @endif
                 
                 @if(auth()->user()->unreadNotifications()->exists())

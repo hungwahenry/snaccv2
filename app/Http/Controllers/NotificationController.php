@@ -44,4 +44,20 @@ class NotificationController extends Controller
 
         return back();
     }
+    public function updateSettings(\App\Http\Requests\UpdateNotificationSettingsRequest $request)
+    {
+        $validated = $request->validated();
+
+        $request->user()->settings()->updateOrCreate(
+            [
+                'type' => $validated['type'],
+                'channel' => $validated['channel'],
+            ],
+            [
+                'is_enabled' => $validated['enabled'],
+            ]
+        );
+
+        return response()->json(['success' => true]);
+    }
 }

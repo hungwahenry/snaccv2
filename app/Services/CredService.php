@@ -121,6 +121,7 @@ class CredService
             $this->awardCred(
                 user: $user,
                 action: 'login_streak',
+                source: $user,
                 description: "Login streak: {$user->login_streak} days"
             );
         });

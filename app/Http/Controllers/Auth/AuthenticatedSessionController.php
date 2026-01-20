@@ -8,7 +8,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use App\Services\CredService;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -28,11 +27,6 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-
-        // Update login streak cred
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
-        app(CredService::class)->updateLoginStreak($user);
 
         return redirect()->intended(route('dashboard', absolute: false));
     }

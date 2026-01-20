@@ -3,14 +3,25 @@
         <div class="flex items-center justify-between mb-6">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Notifications</h1>
             
-            @if(auth()->user()->unreadNotifications->count() > 0)
-                <form action="{{ route('notifications.mark-all-read') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="text-sm text-primary-500 hover:text-primary-600 font-medium">
-                        Mark all as read
-                    </button>
-                </form>
-            @endif
+            <div class="flex items-center gap-3">
+                <button 
+                    x-data
+                    x-on:click="$dispatch('open-modal', 'notification-settings')"
+                    class="p-2 text-primary-500 hover:text-primary-600 dark:text-gray-500 dark:hover:text-gray-400 transition-colors"
+                    title="Notification Settings"
+                >
+                    <x-solar-settings-linear class="w-6 h-6" />
+                </button>
+
+                @if(auth()->user()->unreadNotifications->count() > 0)
+                    <form action="{{ route('notifications.mark-all-read') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="text-sm text-primary-500 hover:text-primary-600 font-medium">
+                            Mark all as read
+                        </button>
+                    </form>
+                @endif
+            </div>
         </div>
 
         <div class="bg-white dark:bg-dark-bg rounded-xl border border-gray-200 dark:border-dark-border overflow-hidden">
@@ -31,4 +42,6 @@
             {{ $notifications->links() }}
         </div>
     </div>
+    
+    <x-notifications.settings-modal :types="$types" :channels="$channels" />
 </x-app-layout>

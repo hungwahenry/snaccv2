@@ -61,7 +61,7 @@
                             :maxlength="maxLength"
                             placeholder="well say something..."
                             rows="1"
-                            class="flex-1 bg-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none resize-none lowercase text-sm"
+                            class="flex-1 bg-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none resize-none text-sm"
                             style="max-height: 100px;"
                             @input="$el.style.height = 'auto'; $el.style.height = Math.min($el.scrollHeight, 100) + 'px'"
                         ></textarea>

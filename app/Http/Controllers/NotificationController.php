@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateNotificationSettingsRequest;
+use App\Models\NotificationChannel;
+use App\Models\NotificationType;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\DatabaseNotification;
@@ -15,7 +18,10 @@ class NotificationController extends Controller
             ->notifications()
             ->paginate(20);
 
-        return view('notifications.index', compact('notifications'));
+        $types = NotificationType::all();
+        $channels = NotificationChannel::all();
+
+        return view('notifications.index', compact('notifications', 'types', 'channels'));
     }
 
     public function markAsRead(Request $request, string $id)
@@ -44,7 +50,7 @@ class NotificationController extends Controller
 
         return back();
     }
-    public function updateSettings(\App\Http\Requests\UpdateNotificationSettingsRequest $request)
+    public function updateSettings(UpdateNotificationSettingsRequest $request)
     {
         $validated = $request->validated();
 

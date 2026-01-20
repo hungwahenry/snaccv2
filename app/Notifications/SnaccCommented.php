@@ -53,18 +53,19 @@ class SnaccCommented extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject('New Comment on Snacc 💬')
             ->line("{$this->commenter->profile->username} commented on your snacc.")
-            ->action('View Snacc', route('snaccs.show', $this->comment->snacc_id));
+            ->action('View Snacc', route('snaccs.show', $this->comment->snacc->slug));
     }
 
-    public function toArray(object $notifiable): array
+    public function toDatabase(object $notifiable): array
     {
         $grouper = app(NotificationGrouper::class);
-
+        $groupKey = $grouper->generateGroupKey(NotificationType::COMMENT->value, 'Snacc', $this->comment->snacc_id);
+        
         return [
+            'notification_group_key' => $groupKey,
             'type' => NotificationType::COMMENT->value,
             'source_id' => $this->comment->snacc_id,
             'source_type' => 'Snacc',
-            'notification_group_key' => $grouper->generateGroupKey(NotificationType::COMMENT->value, 'Snacc', $this->comment->snacc_id),
             'actors' => [
                 [
                     'id' => $this->commenter->id,
@@ -75,7 +76,12 @@ class SnaccCommented extends Notification implements ShouldQueue
             ],
             'total_count' => 1,
             'message' => "{$this->commenter->profile->username} commented on your snacc.",
-            'url' => route('snaccs.show', $this->comment->snacc_id),
+            'url' => route('snaccs.show', $this->comment->snacc->slug),
         ];
+    }
+
+    public function toArray(object $notifiable): array
+    {
+        return $this->toDatabase($notifiable);
     }
 }

@@ -53,18 +53,19 @@ class CommentReplied extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject('New Reply to Comment ↩️')
             ->line("{$this->replier->profile->username} replied to your comment.")
-            ->action('View Reply', route('snaccs.show', $this->reply->snacc_id));
+            ->action('View Reply', route('snaccs.show', $this->reply->snacc->slug));
     }
 
-    public function toArray(object $notifiable): array
+    public function toDatabase(object $notifiable): array
     {
         $grouper = app(NotificationGrouper::class);
-
+        $groupKey = $grouper->generateGroupKey(NotificationType::REPLY->value, 'Snacc', $this->reply->snacc_id);
+        
         return [
+            'notification_group_key' => $groupKey,
             'type' => NotificationType::REPLY->value,
             'source_id' => $this->reply->snacc_id,
             'source_type' => 'Snacc',
-            'notification_group_key' => $grouper->generateGroupKey(NotificationType::REPLY->value, 'Snacc', $this->reply->snacc_id),
             'actors' => [
                 [
                     'id' => $this->replier->id,
@@ -75,7 +76,12 @@ class CommentReplied extends Notification implements ShouldQueue
             ],
             'total_count' => 1,
             'message' => "{$this->replier->profile->username} replied to your comment.",
-            'url' => route('snaccs.show', $this->reply->snacc_id),
+            'url' => route('snaccs.show', $this->reply->snacc->slug),
         ];
+    }
+
+    public function toArray(object $notifiable): array
+    {
+        return $this->toDatabase($notifiable);
     }
 }

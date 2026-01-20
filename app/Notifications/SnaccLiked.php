@@ -59,16 +59,16 @@ class SnaccLiked extends Notification implements ShouldQueue
             ->action('View Snacc', route('snaccs.show', $this->snacc));
     }
 
-    public function toArray(object $notifiable): array
+    public function toDatabase(object $notifiable): array
     {
         $grouper = app(NotificationGrouper::class);
+        $groupKey = $grouper->generateGroupKey(NotificationType::LIKE->value, 'Snacc', $this->snacc->id);
         
-        // Use grouped format from the start
         return [
+            'notification_group_key' => $groupKey,
             'type' => NotificationType::LIKE->value,
             'source_id' => $this->snacc->id,
             'source_type' => 'Snacc',
-            'notification_group_key' => $grouper->generateGroupKey(NotificationType::LIKE->value, 'Snacc', $this->snacc->id),
             'actors' => [
                 [
                     'id' => $this->liker->id,
@@ -79,7 +79,12 @@ class SnaccLiked extends Notification implements ShouldQueue
             ],
             'total_count' => 1,
             'message' => "{$this->liker->profile->username} liked your snacc.",
-            'url' => route('snaccs.show', $this->snacc),
+            'url' => route('snaccs.show', $this->snacc->slug),
         ];
+    }
+
+    public function toArray(object $notifiable): array
+    {
+        return $this->toDatabase($notifiable);
     }
 }

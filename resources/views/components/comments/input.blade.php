@@ -44,7 +44,7 @@
                 <!-- Avatar -->
                 <div class="flex-shrink-0">
                     <img
-                        src="{{ auth()->user()->profile->profile_photo ? Storage::url(auth()->user()->profile->profile_photo) : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' . urlencode(auth()->user()->name) }}"
+                        src="{{ auth()->user()->profile->profile_photo ? Storage::url(auth()->user()->profile->profile_photo) : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' . urlencode(auth()->user()->profile->username) }}"
                         alt="{{ auth()->user()->name }}"
                         class="w-10 h-10 rounded-full object-cover"
                     >

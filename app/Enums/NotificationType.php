@@ -26,24 +26,12 @@ enum NotificationType: string
     public function icon(): string
     {
         return match($this) {
-            self::LIKE => 'solar:heart-bold',
-            self::COMMENT => 'solar:chat-round-dots-bold',
-            self::QUOTE => 'solar:quote-up-square-bold',
-            self::REPLY => 'solar:reply-bold',
-            self::ADD => 'solar:user-plus-bold',
-            self::VIRAL => 'solar:fire-bold',
-        };
-    }
-
-    public function color(): string
-    {
-        return match($this) {
-            self::LIKE => 'red',
-            self::COMMENT => 'blue',
-            self::QUOTE => 'purple',
-            self::REPLY => 'indigo',
-            self::ADD => 'green',
-            self::VIRAL => 'orange',
+            self::LIKE => 'solar-heart-bold',
+            self::COMMENT => 'solar-chat-round-dots-bold',
+            self::QUOTE => 'solar-square-share-line-bold',
+            self::REPLY => 'solar-reply-bold',
+            self::ADD => 'solar-user-plus-bold',
+            self::VIRAL => 'solar-fire-bold',
         };
     }
 

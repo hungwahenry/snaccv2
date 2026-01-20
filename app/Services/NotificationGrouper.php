@@ -27,7 +27,7 @@ class NotificationGrouper
         $groupKey = $this->generateGroupKey($type, $sourceType, $sourceId);
 
         return $notifiable->unreadNotifications()
-            ->where('notification_group_key', $groupKey)
+            ->where('data->notification_group_key', $groupKey)
             ->where('updated_at', '>=', $cutoffTime)
             ->first();
     }
@@ -51,30 +51,36 @@ class NotificationGrouper
         DB::transaction(function () use ($notification, $actor, $type) {
             $data = $notification->data;
 
-            $existingActorIndex = collect($data['actors'])->search(function ($a) use ($actor) {
+            // Ensure actors array exists
+            $actors = $data['actors'];
+
+            $existingActorIndex = collect($actors)->search(function ($a) use ($actor) {
                 return $a['id'] === $actor->id;
             });
 
             if ($existingActorIndex !== false) {
-                $data['actors'][$existingActorIndex]['acted_at'] = now()->toIso8601String();
+                $actors[$existingActorIndex]['acted_at'] = now()->toIso8601String();
             } else {
-                array_unshift($data['actors'], [
+                array_unshift($actors, [
                     'id' => $actor->id,
                     'name' => $actor->profile->username,
                     'avatar' => $actor->profile->profile_photo,
                     'acted_at' => now()->toIso8601String(),
                 ]);
-                $data['total_count'] = $data['total_count'] + 1;
             }
+            
+            $totalCount = $data['total_count'] + ($existingActorIndex === false ? 1 : 0);
 
             $maxActors = config('notifications.grouping.max_actors_stored', 10);
-            if (count($data['actors']) > $maxActors) {
-                $data['actors'] = array_slice($data['actors'], 0, $maxActors);
+            if (count($actors) > $maxActors) {
+                $actors = array_slice($actors, 0, $maxActors);
             }
+            
+            $data['actors'] = $actors;
+            $data['total_count'] = $totalCount;
 
             $notification->update([
                 'data' => $data,
-                'actor_count' => $data['total_count'],
                 'updated_at' => now(),
             ]);
         });

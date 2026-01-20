@@ -54,18 +54,19 @@ class CommentLiked extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject('New Like on Comment 👍')
             ->line("{$this->liker->profile->username} liked your comment.")
-            ->action('View Comment', route('snaccs.show', $this->comment->snacc_id));
+            ->action('View Comment', route('snaccs.show', $this->comment->snacc->slug));
     }
 
-    public function toArray(object $notifiable): array
+    public function toDatabase(object $notifiable): array
     {
         $grouper = app(NotificationGrouper::class);
-
+        $groupKey = $grouper->generateGroupKey(NotificationType::LIKE->value, 'Snacc', $this->comment->snacc_id);
+        
         return [
+            'notification_group_key' => $groupKey,
             'type' => NotificationType::LIKE->value,
             'source_id' => $this->comment->snacc_id,
             'source_type' => 'Snacc',
-            'notification_group_key' => $grouper->generateGroupKey(NotificationType::LIKE->value, 'Snacc', $this->comment->snacc_id),
             'actors' => [
                 [
                     'id' => $this->liker->id,
@@ -76,7 +77,12 @@ class CommentLiked extends Notification implements ShouldQueue
             ],
             'total_count' => 1,
             'message' => "{$this->liker->profile->username} liked your comment.",
-            'url' => route('snaccs.show', $this->comment->snacc_id),
+            'url' => route('snaccs.show', $this->comment->snacc->slug),
         ];
+    }
+
+    public function toArray(object $notifiable): array
+    {
+        return $this->toDatabase($notifiable);
     }
 }

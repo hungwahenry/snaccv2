@@ -12,19 +12,19 @@ class NotificationRenderer
         $data = $notification->data;
         $type = NotificationType::from($data['type']);
 
+        $actors = $data['actors'];
+        $totalCount = $data['total_count'];
+
         return [
             'type' => $type,
             'message' => $this->getMessage($data, $type),
-            'url' => $data['url'],
+            'url' => $data['url'] ?? '#',
             'is_read' => !is_null($notification->read_at),
             'date' => $notification->created_at->diffForHumans(),
             'icon' => $type->icon(),
-            'color' => $type->color(),
-            'bg_class' => "bg-{$type->color()}-100",
-            'text_class' => "text-{$type->color()}-600",
-            'actors' => $data['actors'],
-            'is_grouped' => $data['total_count'] > 1,
-            'total_count' => $data['total_count'],
+            'actors' => $actors,
+            'is_grouped' => $totalCount > 1,
+            'total_count' => $totalCount,
         ];
     }
 
@@ -46,7 +46,7 @@ class NotificationRenderer
         if ($othersCount <= 0) {
             return trim("{$firstName} {$verb} {$target}.");
         } elseif ($othersCount === 1) {
-             $secondName = $actors[1]['name'];
+             $secondName = $actors[1]['name'] ?? 'someone';
              return trim("{$firstName} and {$secondName} {$verb} {$target}.");
         } else {
             return trim("{$firstName} and {$othersCount} others {$verb} {$target}.");

@@ -14,9 +14,7 @@ class UserAdded extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(
-        public User $adder
-    ) {}
+    public function __construct(public User $adder) {}
 
     public function via(object $notifiable): array
     {
@@ -54,15 +52,16 @@ class UserAdded extends Notification implements ShouldQueue
             ->action('View Profile', route('profile.show', $this->adder->profile->username));
     }
 
-    public function toArray(object $notifiable): array
+    public function toDatabase(object $notifiable): array
     {
         $grouper = app(NotificationGrouper::class);
-
+        $groupKey = $grouper->generateGroupKey(NotificationType::ADD->value, 'User', $this->adder->id);
+        
         return [
+            'notification_group_key' => $groupKey,
             'type' => NotificationType::ADD->value,
             'source_id' => $this->adder->id,
             'source_type' => 'User',
-            'notification_group_key' => $grouper->generateGroupKey(NotificationType::ADD->value, 'User', $this->adder->id),
             'actors' => [
                 [
                     'id' => $this->adder->id,
@@ -72,8 +71,13 @@ class UserAdded extends Notification implements ShouldQueue
                 ]
             ],
             'total_count' => 1,
-            'message' => "{$this->adder->profile->username} added you to their list.",
+            'message' => "{$this->adder->profile->username} added you.",
             'url' => route('profile.show', $this->adder->profile->username),
         ];
+    }
+
+    public function toArray(object $notifiable): array
+    {
+        return $this->toDatabase($notifiable);
     }
 }

@@ -20,6 +20,7 @@
             action="{{ route('snaccs.store') }}"
             enctype="multipart/form-data"
             x-data="createSnaccForm()"
+            @snacc-gif-selected.document="selectedGif = $event.detail"
             @submit="handleSubmit"
             class="flex flex-col flex-1 overflow-hidden"
         >
@@ -59,7 +60,7 @@
                             <button
                                 type="button"
                                 x-data=""
-                                @click="$dispatch('open-modal', 'gif-picker')"
+                                @click="Alpine.store('gifPickerState').eventName = 'snacc-gif-selected'; $dispatch('open-modal', 'gif-picker')"
                                 x-show="images.length === 0 && !selectedGif"
                                 class="flex items-center justify-center w-8 h-8 text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-dark-bg rounded-lg transition-colors"
                                 title="add gif"

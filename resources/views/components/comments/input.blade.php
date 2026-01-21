@@ -7,6 +7,7 @@
             method="POST"
             @submit.prevent="postComment"
             x-data="commentInput('{{ route('comments.store', $snacc) }}', '{{ csrf_token() }}')"
+            @comment-gif-selected.document="selectedGif = $event.detail; gifUrl = $event.detail.original_url"
         >
             @csrf
 
@@ -72,7 +73,7 @@
                         <!-- GIF Button -->
                         <button
                             type="button"
-                            @click="$dispatch('open-modal', 'gif-picker')"
+                            @click="Alpine.store('gifPickerState').eventName = 'comment-gif-selected'; $dispatch('open-modal', 'gif-picker')"
                             class="flex-shrink-0 p-1.5 text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-dark-surface"
                             title="add GIF"
                         >

@@ -22,11 +22,6 @@ export default () => ({
             }
         });
 
-        // Listen for the gif-selected event from the GIF picker
-        window.addEventListener('gif-selected', (e) => {
-            this.selectedGif = e.detail;
-        });
-
         // Listen for quote-snacc event
         window.addEventListener('quote-snacc', (e) => {
             this.quotedSnaccSlug = e.detail.slug;

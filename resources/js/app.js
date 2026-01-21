@@ -26,4 +26,9 @@ Alpine.data('commentsList', commentsList);
 Alpine.data('commentInput', commentInput);
 Alpine.data('reportModal', reportModal);
 
+// Add a global store for GIF picker state
+Alpine.store('gifPickerState', {
+    eventName: 'gif-selected', // Default event name
+});
+
 Alpine.start();

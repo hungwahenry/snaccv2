@@ -14,12 +14,6 @@ export default (storeUrl, csrfToken) => ({
             this.repliedToUsername = e.detail.username;
             this.$refs.commentInput.focus();
         });
-
-        // Listen for gif-selected event
-        window.addEventListener('gif-selected', (e) => {
-            this.selectedGif = e.detail;
-            this.gifUrl = e.detail.original_url;
-        });
     },
 
     get remainingChars() {

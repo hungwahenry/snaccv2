@@ -21,9 +21,9 @@
         <a href="{{ route('explore') }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('explore*') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group">
             <div class="relative">
                 @if(request()->routeIs('explore*'))
-                    <x-solar-compass-bold class="w-7 h-7" />
+                    <x-solar-compass-square-bold class="w-7 h-7" />
                 @else
-                    <x-solar-compass-linear class="w-7 h-7" />
+                    <x-solar-compass-square-linear class="w-7 h-7" />
                 @endif
             </div>
             <span class="hidden lg:block ml-4 text-base {{ request()->routeIs('explore*') ? 'font-bold' : 'font-medium' }} capitalize">explore</span>

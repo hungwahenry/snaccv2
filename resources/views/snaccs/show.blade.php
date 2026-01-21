@@ -7,7 +7,7 @@
              '{{ route('comments.index', $snacc) }}'
          )"
     >
-        <!-- Single Snacc Post -->
+        <!-- Single Snacc -->
         <x-posts.card :snacc="$snacc" />
 
         <!-- Comments Section -->

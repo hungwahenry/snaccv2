@@ -13,7 +13,7 @@
         <span class="font-bold text-gray-900 dark:text-white" x-text="postsCount">
             {{ $user->posts_count ?? 0 }}
         </span>
-        <span class="text-gray-500 text-xs uppercase tracking-wide">Posts</span>
+        <span class="text-gray-500 text-xs uppercase tracking-wide">Snaccs</span>
     </div>
 
     <!-- Cred Score -->

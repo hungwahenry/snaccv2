@@ -30,7 +30,7 @@
                 <!-- Header -->
                 <x-posts.card.header :snacc="$snacc" />
 
-                <!-- Post Content -->
+                <!-- Snacc Content -->
                 <x-posts.card.content :snacc="$snacc" />
 
                 <!-- Media (Images or GIF) -->

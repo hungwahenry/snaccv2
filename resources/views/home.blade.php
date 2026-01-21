@@ -10,7 +10,7 @@
         <!-- Feed Tabs -->
         <x-feed-tabs route="home" :sort="$sort" />
 
-        <!-- Posts Feed -->
+        <!-- Snaccs Feed -->
         <div id="feed-container">
             <x-posts.feed-list :snaccs="$snaccs" />
         </div>

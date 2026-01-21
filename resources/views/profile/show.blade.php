@@ -11,7 +11,7 @@
         <!-- Feed Content -->
         <div class="mt-0">
              <div class="px-4 py-3 border-b border-gray-100 dark:border-dark-border">
-                <h3 class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Posts</h3>
+                <h3 class="text-sm font-bold text-gray-900 dark:text-white lowercase tracking-wider">Snaccs</h3>
              </div>
 
              <div id="user-feed-container">

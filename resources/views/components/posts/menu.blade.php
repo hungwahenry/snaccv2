@@ -29,10 +29,10 @@
         </button>
 
         @can('delete', $snacc)
-            <form action="{{ route('snaccs.destroy', $snacc) }}" method="POST" onsubmit="return confirm('are you sure you want to delete this snacc?')">
+            <form action="{{ route('snaccs.destroy', $snacc) }}" method="POST" x-data onsubmit="return confirm('are you sure you want to delete this snacc?')">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="w-full px-3 py-2 text-left text-xs text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors flex items-center gap-2 lowercase">
+                <button type="submit" @click.stop class="w-full px-3 py-2 text-left text-xs text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors flex items-center gap-2 lowercase">
                     <x-solar-trash-bin-trash-linear class="w-3.5 h-3.5 flex-shrink-0" />
                     <span>delete</span>
                 </button>

@@ -36,7 +36,7 @@
                 <x-solar-magnifer-linear class="w-16 h-16 text-gray-300 dark:text-gray-600 mb-4" />
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">search snacc</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400 max-w-md">
-                    find posts, users, and vibetags across campus or the entire snacc community
+                    find snaccs, users, and vibetags across campus or the entire snacc community
                 </p>
             </div>
         @elseif(!$hasResults)

@@ -24,6 +24,7 @@
             @unless($hideNavigation)
                 @include('layouts.navigation')
                 <x-right-sidebar />
+                <x-create-snacc-fab />
             @endunless
 
             <!-- Main Content Area -->

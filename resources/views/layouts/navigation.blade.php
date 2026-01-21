@@ -41,16 +41,6 @@
             <span class="hidden lg:block ml-4 text-base {{ request()->routeIs('search') ? 'font-bold' : 'font-medium' }} capitalize">search</span>
         </a>
 
-        <!-- Create Post -->
-        <button
-            type="button"
-            x-data=""
-            @click="$dispatch('open-modal', 'create-snacc')"
-            class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400 transition-colors group">
-            <x-solar-magic-stick-3-linear class="w-7 h-7" />
-            <span class="hidden lg:block ml-4 text-base font-medium capitalize">create snacc</span>
-        </button>
-
         <!-- Notifications -->
         <a href="{{ route('notifications.index') }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('notifications*') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group relative">
             <div class="relative">

@@ -49,7 +49,7 @@
 
         <!-- Media -->
         @if($snacc->images->isNotEmpty())
-            <div class="px-4 pb-3 relative pointer-events-none z-10">
+            <div class="px-4 pb-3 relative pointer-events-auto z-10">
                 <x-posts.card.image-gallery :images="$snacc->images" />
             </div>
         @elseif($snacc->gif_url)

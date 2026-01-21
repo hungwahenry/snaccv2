@@ -10,6 +10,7 @@ use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfileSettingsController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SnaccController;
 use App\Http\Controllers\SnaccLikeController;
 use App\Http\Controllers\SnaccViewController;
@@ -24,6 +25,7 @@ require __DIR__.'/auth.php';
 
 Route::get('/home', [HomeController::class, 'index'])->middleware(['auth', 'verified'])->name('home');
 Route::get('/explore', [ExploreController::class, 'index'])->middleware(['auth', 'verified'])->name('explore');
+Route::get('/search', [SearchController::class, 'index'])->middleware(['auth', 'verified'])->name('search');
 
 Route::middleware('auth')->group(function () {
     Route::get('/onboarding', [OnboardingController::class, 'show'])->name('onboarding');

@@ -132,4 +132,21 @@ class Snacc extends Model
     {
         return $query->where('visibility', 'global');
     }
+
+    public function scopeSearch($query, string $searchTerm)
+    {
+        return $query->where(function ($q) use ($searchTerm) {
+            // Search in content
+            $q->where('content', 'LIKE', "%{$searchTerm}%")
+                // Search in vibetags
+                ->orWhereHas('vibetags', function ($vibeQuery) use ($searchTerm) {
+                    $vibeQuery->where('name', 'LIKE', "%{$searchTerm}%")
+                             ->orWhere('slug', 'LIKE', "%{$searchTerm}%");
+                })
+                // Search in author username
+                ->orWhereHas('user.profile', function ($profileQuery) use ($searchTerm) {
+                    $profileQuery->where('username', 'LIKE', "%{$searchTerm}%");
+                });
+        });
+    }
 }

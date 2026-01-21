@@ -30,4 +30,17 @@ class Profile extends Model
     {
         return $this->belongsTo(University::class);
     }
+
+    // Scopes
+    public function scopeSearch($query, string $searchTerm)
+    {
+        return $query->where(function ($q) use ($searchTerm) {
+            $q->where('username', 'LIKE', "%{$searchTerm}%")
+              ->orWhere('bio', 'LIKE', "%{$searchTerm}%")
+              ->orWhereHas('university', function ($uniQuery) use ($searchTerm) {
+                  $uniQuery->where('name', 'LIKE', "%{$searchTerm}%")
+                           ->orWhere('acronym', 'LIKE', "%{$searchTerm}%");
+              });
+        });
+    }
 }

@@ -29,6 +29,18 @@
             <span class="hidden lg:block ml-4 text-base {{ request()->routeIs('explore*') ? 'font-bold' : 'font-medium' }} capitalize">explore</span>
         </a>
 
+        <!-- Search -->
+        <a href="{{ route('search') }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('search') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group">
+            <div class="relative">
+                @if(request()->routeIs('search'))
+                    <x-solar-magnifer-bold class="w-7 h-7" />
+                @else
+                    <x-solar-magnifer-linear class="w-7 h-7" />
+                @endif
+            </div>
+            <span class="hidden lg:block ml-4 text-base {{ request()->routeIs('search') ? 'font-bold' : 'font-medium' }} capitalize">search</span>
+        </a>
+
         <!-- Create Post -->
         <button
             type="button"

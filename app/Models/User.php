@@ -125,5 +125,34 @@ class User extends Authenticatable
     {
         return $this->addedByUsers()->where('user_id', $user->id)->exists();
     }
+
+    public function hasPostedGhostRecently(): bool
+    {
+        return $this->hasMany(Snacc::class)
+            ->where('is_ghost', true)
+            ->where('created_at', '>=', now()->subHours(24))
+            ->exists();
+    }
+
+    public function ghostResetTime(): string
+    {
+        $lastGhost = $this->hasMany(Snacc::class)
+            ->where('is_ghost', true)
+            ->latest()
+            ->first();
+
+        if (!$lastGhost) {
+            return '';
+        }
+
+        $resetTime = $lastGhost->created_at->addHours(24);
+        
+        return now()->diff($resetTime)->format('%hh %im');
+    }
+
+    public function snaccs(): HasMany
+    {
+        return $this->hasMany(Snacc::class);
+    }
 }
 

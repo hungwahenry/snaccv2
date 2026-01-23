@@ -30,13 +30,13 @@ class SnaccController extends Controller
         $isGhost = $request->boolean('is_ghost');
 
         if ($isGhost) {
-            $hasGhostedToday = Snacc::where('user_id', auth()->id())
+            $hasGhostedRecently = Snacc::where('user_id', auth()->id())
                 ->where('is_ghost', true)
-                ->whereDate('created_at', now())
+                ->where('created_at', '>=', now()->subHours(24))
                 ->exists();
 
-            if ($hasGhostedToday) {
-                return redirect()->back()->withErrors(['is_ghost' => 'you can only post one ghost snacc per day.']);
+            if ($hasGhostedRecently) {
+                return redirect()->back()->withErrors(['is_ghost' => 'you can only post one ghost snacc every 24 hours.']);
             }
         }
 

@@ -71,15 +71,24 @@
                             </button>
 
                             <!-- Ghost Mode Icon -->
-                            <button
-                                type="button"
-                                @click="isGhost = !isGhost"
-                                :class="isGhost ? 'text-primary-500 bg-primary-50 dark:bg-primary-900/20' : 'text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-dark-bg'"
-                                class="flex items-center justify-center w-8 h-8 rounded-lg transition-colors"
-                                title="ghost mode"
-                            >
-                                <x-solar-ghost-smile-linear class="w-5 h-5" />
-                            </button>
+                            @if(!auth()->user()->hasPostedGhostRecently())
+                                <button
+                                    type="button"
+                                    @click="isGhost = !isGhost"
+                                    :class="isGhost ? 'text-primary-500 bg-primary-50 dark:bg-primary-900/20' : 'text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-dark-bg'"
+                                    class="flex items-center justify-center w-8 h-8 rounded-lg transition-colors"
+                                    title="ghost mode"
+                                >
+                                    <x-solar-ghost-smile-linear class="w-5 h-5" />
+                                </button>
+                            @else
+                                <div class="flex items-center gap-2 px-1 py-1 rounded-lg cursor-not-allowed opacity-60">
+                                    <x-solar-ghost-smile-linear class="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                                    <span class="text-xs text-gray-400 dark:text-gray-500 font-mono">
+                                        {{ auth()->user()->ghostResetTime() }}
+                                    </span>
+                                </div>
+                            @endif
                         </div>
 
                         <div class="flex items-center gap-3">

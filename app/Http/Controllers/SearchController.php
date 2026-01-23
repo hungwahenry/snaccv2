@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Vibetag;
 use App\Services\SearchService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -21,6 +22,11 @@ class SearchController extends Controller
 
         // Validate query
         if (empty(trim($query))) {
+            // Get top 20 trending vibetags
+            $trendingVibetags = Vibetag::orderByDesc('usage_count')
+                ->take(20)
+                ->get();
+
             return view('search.index', [
                 'query' => '',
                 'type' => $type,
@@ -28,6 +34,7 @@ class SearchController extends Controller
                 'sort' => $sort,
                 'results' => collect(),
                 'hasResults' => false,
+                'trendingVibetags' => $trendingVibetags,
             ]);
         }
 

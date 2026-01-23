@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Snacc;
 use App\Services\CommentService;
+
 use App\Services\ViewService;
 use App\Services\HeatService;
 use App\Jobs\UpdateHeatScore;

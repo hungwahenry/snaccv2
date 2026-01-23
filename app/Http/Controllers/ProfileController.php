@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Profile;
 use App\Models\Snacc;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -11,6 +12,9 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+    public function __construct(
+    ) {}
+
     public function show(Request $request, string $username)
     {
         $profile = Profile::where('username', $username)->firstOrFail();

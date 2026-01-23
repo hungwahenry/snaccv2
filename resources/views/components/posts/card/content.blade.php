@@ -7,7 +7,8 @@
             '/~(\w+)/',
             function($matches) {
                 $tag = $matches[1];
-                return '<span class="text-primary-500 dark:text-primary-400 hover:underline cursor-pointer">~' . $tag . '</span>';
+                $url = route('search', ['q' => $tag, 'type' => 'posts']);
+                return '<a href="' . $url . '" class="text-primary-500 dark:text-primary-400 hover:underline font-medium">~' . $tag . '</a>';
             },
             htmlspecialchars($content, ENT_QUOTES, 'UTF-8')
         );

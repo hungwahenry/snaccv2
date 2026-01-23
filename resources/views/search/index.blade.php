@@ -31,14 +31,8 @@
 
         <!-- Search Results -->
         @if(empty($query))
-            <!-- Empty State: No Search Query -->
-            <div class="flex flex-col items-center justify-center py-16 text-center px-4">
-                <x-solar-magnifer-linear class="w-16 h-16 text-gray-300 dark:text-gray-600 mb-4" />
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">search snacc</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400 max-w-md">
-                    find snaccs, users, and vibetags across campus or the entire snacc community
-                </p>
-            </div>
+            <!-- Trending Vibetags Section -->
+            <x-search.trending-vibetags :vibetags="$trendingVibetags" />
         @elseif(!$hasResults)
             <!-- Empty State: No Results -->
             <div class="flex flex-col items-center justify-center py-16 text-center px-4">

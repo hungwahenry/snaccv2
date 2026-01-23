@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Snacc;
+
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class HomeController extends Controller
 {
+    public function __construct(
+    ) {}
+
     public function index(Request $request): View|\Illuminate\Http\JsonResponse
     {
         $user = $request->user();

@@ -145,10 +145,29 @@ class Snacc extends Model
                     $vibeQuery->where('name', 'LIKE', "%{$searchTerm}%")
                              ->orWhere('slug', 'LIKE', "%{$searchTerm}%");
                 })
-                // Search in author username
-                ->orWhereHas('user.profile', function ($profileQuery) use ($searchTerm) {
-                    $profileQuery->where('username', 'LIKE', "%{$searchTerm}%");
+                // Search in author username (excluding ghosts)
+                ->orWhere(function ($subQ) use ($searchTerm) {
+                    $subQ->where('is_ghost', false)
+                         ->whereHas('user.profile', function ($profileQuery) use ($searchTerm) {
+                             $profileQuery->where('username', 'LIKE', "%{$searchTerm}%");
+                         });
                 });
         });
+    }
+
+    public function toArray()
+    {
+        $array = parent::toArray();
+
+        // If ghost, remove user info to leaks
+        if ($this->is_ghost) {
+            unset($array['user']);
+            unset($array['user_id']);
+            if (isset($this->relations['user'])) {
+                unset($this->relations['user']);
+            }
+        }
+
+        return $array;
     }
 }

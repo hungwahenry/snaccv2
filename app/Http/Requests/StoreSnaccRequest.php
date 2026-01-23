@@ -22,6 +22,7 @@ class StoreSnaccRequest extends FormRequest
             'vibetags' => ['nullable', 'array'],
             'vibetags.*' => ['string', 'max:50'],
             'quoted_snacc_slug' => ['nullable', 'exists:snaccs,slug'],
+            'is_ghost' => ['nullable', 'boolean'],
         ];
     }
 

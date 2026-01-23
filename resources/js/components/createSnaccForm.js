@@ -8,6 +8,7 @@ export default () => ({
     error: '',
     quotedSnaccSlug: null,
     quotedSnaccData: null,
+    isGhost: false,
 
     init() {
         // Listen for gif-selected event

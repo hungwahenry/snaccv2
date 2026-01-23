@@ -20,6 +20,7 @@ class Snacc extends Model
         'visibility',
         'quoted_snacc_id',
         'is_deleted',
+        'is_ghost',
         'slug',
         'status',
         'heat_score',
@@ -30,6 +31,7 @@ class Snacc extends Model
 
     protected $casts = [
         'is_deleted' => 'boolean',
+        'is_ghost' => 'boolean',
         'heat_score' => 'integer',
         'views_count' => 'integer',
         'heat_peak_at' => 'datetime',

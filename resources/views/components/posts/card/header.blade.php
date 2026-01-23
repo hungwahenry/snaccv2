@@ -2,9 +2,15 @@
 
 <div class="flex items-center justify-between gap-2 mb-1">
     <div class="flex items-center gap-1 min-w-0 flex-1">
-        <a href="{{ route('profile.show', $snacc->user->profile->username) }}" class="font-semibold text-gray-900 dark:text-white text-sm lowercase truncate hover:underline">
-            {{ $snacc->user->profile->username }}
-        </a>
+        @if($snacc->is_ghost)
+            <span class="font-semibold text-gray-900 dark:text-white text-sm lowercase truncate">
+                ghost snacc
+            </span>
+        @else
+            <a href="{{ route('profile.show', $snacc->user->profile->username) }}" class="font-semibold text-gray-900 dark:text-white text-sm lowercase truncate hover:underline">
+                {{ $snacc->user->profile->username }}
+            </a>
+        @endif
         <span class="text-gray-500 dark:text-gray-400 text-sm flex-shrink-0">·</span>
         <span class="text-gray-500 dark:text-gray-400 text-xs flex-shrink-0 lowercase">
             {{ $snacc->university->acronym }}

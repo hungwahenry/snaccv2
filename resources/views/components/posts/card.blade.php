@@ -1,7 +1,7 @@
 @props(['snacc'])
 
 <article 
-    class="relative overflow-hidden border-b border-gray-200 dark:border-dark-border hover:bg-gray-50 dark:hover:bg-dark-bg/50 transition-all duration-300"
+    class="relative overflow-hidden border-b border-gray-200 dark:border-dark-border hover:bg-gray-50 dark:hover:bg-dark-bg/50 transition-all duration-300 {{ $snacc->is_ghost ? 'border-dashed border-b-2' : '' }}"
     @if($snacc->heat_tier)
         style="box-shadow: inset 4px 0 0 0 {{ $snacc->heat_tier->color }}, inset 24px 0 20px -10px {{ $snacc->heat_tier->color }}20, 0 4px 20px -5px {{ $snacc->heat_tier->color }}15;"
     @endif
@@ -17,13 +17,20 @@
     <div class="px-4 py-3 relative z-10">
         <div class="flex gap-3">
             <!-- Avatar -->
-            <a href="{{ route('profile.show', $snacc->user->profile->username) }}" class="flex-shrink-0">
-                <img
-                    src="{{ $snacc->user->profile->profile_photo ? Storage::url($snacc->user->profile->profile_photo) : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' . urlencode($snacc->user->profile->username) }}"
-                    alt="{{ $snacc->user->profile->username }}"
-                    class="w-10 h-10 rounded-full object-cover"
-                >
-            </a>
+            <!-- Avatar -->
+            @if($snacc->is_ghost)
+                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gray-100 dark:bg-dark-bg border border-gray-200 dark:border-dark-border flex items-center justify-center">
+                    <x-solar-ghost-smile-bold class="w-6 h-6 text-gray-400 dark:text-gray-500" />
+                </div>
+            @else
+                <a href="{{ route('profile.show', $snacc->user->profile->username) }}" class="flex-shrink-0">
+                    <img
+                        src="{{ $snacc->user->profile->profile_photo ? Storage::url($snacc->user->profile->profile_photo) : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' . urlencode($snacc->user->profile->username) }}"
+                        alt="{{ $snacc->user->profile->username }}"
+                        class="w-10 h-10 rounded-full object-cover"
+                    >
+                </a>
+            @endif
 
             <!-- Content -->
             <div class="flex-1 min-w-0">

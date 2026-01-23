@@ -21,6 +21,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+
 require __DIR__.'/auth.php';
 
 Route::get('/home', [HomeController::class, 'index'])->middleware(['auth', 'verified'])->name('home');

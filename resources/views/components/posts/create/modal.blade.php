@@ -36,11 +36,13 @@
                     <textarea
                         name="content"
                         x-model="content"
-                        placeholder="what's on your mind?"
+                        :placeholder="isGhost ? 'ghosting...' : 'what\'s on your mind?'"
                         rows="2"
                         maxlength="1200"
-                        class="w-full px-4 py-4 bg-gray-50 dark:bg-dark-surface border-2 border-gray-200 dark:border-dark-border focus:border-primary-500 dark:focus:border-primary-500 focus:ring-0 rounded-2xl text-base text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 transition-colors duration-200 resize-none"
+                        :class="isGhost ? 'border-dashed border-primary-300 dark:border-primary-700' : 'border-gray-200 dark:border-dark-border'"
+                        class="w-full px-4 py-4 bg-gray-50 dark:bg-dark-surface border-2 focus:border-primary-500 dark:focus:border-primary-500 focus:ring-0 rounded-2xl text-base text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 transition-colors duration-200 resize-none"
                     ></textarea>
+                    <input type="hidden" name="is_ghost" :value="isGhost ? 1 : 0">
 
                     <!-- Character Counter and Media Icons -->
                     <div class="flex items-center justify-between mt-2 px-1">
@@ -66,6 +68,17 @@
                                 title="add gif"
                             >
                                 <x-solar-file-smile-linear class="w-5 h-5" />
+                            </button>
+
+                            <!-- Ghost Mode Icon -->
+                            <button
+                                type="button"
+                                @click="isGhost = !isGhost"
+                                :class="isGhost ? 'text-primary-500 bg-primary-50 dark:bg-primary-900/20' : 'text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-dark-bg'"
+                                class="flex items-center justify-center w-8 h-8 rounded-lg transition-colors"
+                                title="ghost mode"
+                            >
+                                <x-solar-ghost-smile-linear class="w-5 h-5" />
                             </button>
                         </div>
 

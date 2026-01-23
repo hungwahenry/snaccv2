@@ -26,7 +26,8 @@ class SnaccService
         ?array $images = [],
         ?string $gifUrl = null,
         ?array $vibetags = [],
-        ?string $quotedSnaccSlug = null
+        ?string $quotedSnaccSlug = null,
+        bool $isGhost = false
     ): Snacc {
         return DB::transaction(function () use (
             $userId,
@@ -36,7 +37,8 @@ class SnaccService
             $images,
             $gifUrl,
             $vibetags,
-            $quotedSnaccSlug
+            $quotedSnaccSlug,
+            $isGhost
         ) {
             $quotedSnaccId = null;
             if ($quotedSnaccSlug) {
@@ -51,17 +53,14 @@ class SnaccService
                 'visibility' => $visibility,
                 'gif_url' => $gifUrl,
                 'quoted_snacc_id' => $quotedSnaccId,
+                'is_ghost' => $isGhost,
             ]);
 
             // Notify quoted snacc owner (if quoted and not self-quote)
             if ($quotedSnaccId) {
                 $quotedSnacc = Snacc::find($quotedSnaccId);
-                if ($quotedSnacc && $quotedSnacc->user_id !== $userId) {
-                if ($quotedSnacc && $quotedSnacc->user_id !== $userId) {
-                if ($quotedSnacc && $quotedSnacc->user_id !== $userId) {
+                if ($quotedSnacc && $quotedSnacc->user_id !== $userId && !$isGhost) {
                     $quotedSnacc->user->notify(new SnaccQuoted($snacc, $snacc->user));
-                }
-                }
                 }
             }
 

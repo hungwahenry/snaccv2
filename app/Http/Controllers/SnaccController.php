@@ -26,6 +26,20 @@ class SnaccController extends Controller
             explicitTags: $validated['vibetags'] ?? []
         );
 
+        // Check for Ghost Mode
+        $isGhost = $request->boolean('is_ghost');
+
+        if ($isGhost) {
+            $hasGhostedToday = Snacc::where('user_id', auth()->id())
+                ->where('is_ghost', true)
+                ->whereDate('created_at', now())
+                ->exists();
+
+            if ($hasGhostedToday) {
+                return redirect()->back()->withErrors(['is_ghost' => 'you can only post one ghost snacc per day.']);
+            }
+        }
+
         $snacc = $this->snaccService->createSnacc(
             userId: auth()->id(),
             universityId: auth()->user()->profile->university_id,
@@ -34,7 +48,8 @@ class SnaccController extends Controller
             images: $request->file('images') ?? [],
             gifUrl: $validated['gif_url'] ?? null,
             vibetags: $vibetags,
-            quotedSnaccSlug: $validated['quoted_snacc_slug'] ?? null
+            quotedSnaccSlug: $validated['quoted_snacc_slug'] ?? null,
+            isGhost: $isGhost
         );
 
         return redirect()->route('snaccs.show', $snacc)->with('success', 'snacc posted successfully!');

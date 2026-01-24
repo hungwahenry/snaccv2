@@ -17,16 +17,10 @@
         };
 
         if (navigator.share) {
-            navigator.share(shareData).catch((error) => {
-                if (error.name !== 'AbortError') {
-                    console.error('Error sharing:', error);
-                }
-            });
+            navigator.share(shareData);
         } else {
-            // Fallback: copy to clipboard
-            navigator.clipboard.writeText('{{ $shareUrl }}').then(() => {
-                alert('link copied to clipboard!');
-            });
+            navigator.clipboard.writeText(shareData.url);
+            alert('Link copied!');
         }
     "
     class="flex items-center gap-1 group text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"

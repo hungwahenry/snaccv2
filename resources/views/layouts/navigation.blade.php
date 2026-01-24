@@ -6,7 +6,7 @@
         </a>
 
         <!-- Home -->
-        <a href="{{ route('home') }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('home') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group">
+        <a href="{{ route('home') }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('home') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group">
             <div class="relative">
                 @if(request()->routeIs('home'))
                     <x-solar-home-smile-bold class="w-7 h-7" />
@@ -18,7 +18,7 @@
         </a>
 
         <!-- Explore -->
-        <a href="{{ route('explore') }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('explore*') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group">
+        <a href="{{ route('explore') }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('explore*') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group">
             <div class="relative">
                 @if(request()->routeIs('explore*'))
                     <x-solar-compass-square-bold class="w-7 h-7" />
@@ -30,7 +30,7 @@
         </a>
 
         <!-- Search -->
-        <a href="{{ route('search') }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('search') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group">
+        <a href="{{ route('search') }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('search') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group">
             <div class="relative">
                 @if(request()->routeIs('search'))
                     <x-solar-magnifer-bold class="w-7 h-7" />
@@ -42,7 +42,7 @@
         </a>
 
         <!-- Notifications -->
-        <a href="{{ route('notifications.index') }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('notifications*') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group relative">
+        <a href="{{ route('notifications.index') }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('notifications*') ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group relative">
             <div class="relative">
                 @if(request()->routeIs('notifications*'))
                     <x-solar-hand-shake-bold class="w-7 h-7" />
@@ -58,7 +58,7 @@
         </a>
 
         <!-- Profile -->
-        <a href="{{ route('profile.show', auth()->user()->profile->username) }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('profile.show') && request()->route('username') === auth()->user()->profile->username ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-bg hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group">
+        <a href="{{ route('profile.show', auth()->user()->profile->username) }}" class="flex items-center justify-center lg:justify-start lg:w-full lg:px-4 lg:py-3 lg:rounded-xl {{ request()->routeIs('profile.show') && request()->route('username') === auth()->user()->profile->username ? 'text-primary-500' : 'text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400' }} transition-colors group">
             <img 
                 src="{{ auth()->user()->profile?->profile_photo ? Storage::url(auth()->user()->profile->profile_photo) : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' . urlencode(auth()->user()->profile->username) }}" 
                 alt="Profile" 

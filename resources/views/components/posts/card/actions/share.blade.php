@@ -2,18 +2,22 @@
 
 @php
     $shareUrl = route('snaccs.show', $snacc);
-    $shareTitle = 'Check out this snacc from ' . $snacc->user->profile->username;
+    $shareTitle = $snacc->is_ghost 
+        ? 'Check out this ghost snacc' 
+        : 'Check out this snacc from ' . $snacc->user->profile->username;
 @endphp
 
 <button
     type="button"
     x-data=""
     @click="
+        const shareData = {
+            title: {{ Js::from($shareTitle) }},
+            url: {{ Js::from($shareUrl) }}
+        };
+
         if (navigator.share) {
-            navigator.share({
-                title: '{{ $shareTitle }}',
-                url: '{{ $shareUrl }}'
-            }).catch((error) => {
+            navigator.share(shareData).catch((error) => {
                 if (error.name !== 'AbortError') {
                     console.error('Error sharing:', error);
                 }

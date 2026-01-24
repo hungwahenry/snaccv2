@@ -103,4 +103,17 @@ class Comment extends Model
             }
         });
     }
+    public function scopeWithoutBlockedUsers($query)
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return $query;
+        }
+
+        $blockedIds = $user->blockedUsers()->pluck('users.id');
+        $blockedByIds = $user->blockedByUsers()->pluck('users.id');
+
+        return $query->whereNotIn('user_id', $blockedIds)
+                     ->whereNotIn('user_id', $blockedByIds);
+    }
 }

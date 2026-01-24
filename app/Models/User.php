@@ -55,6 +55,7 @@ class User extends Authenticatable
         'added_by_count',
         'posts_count',
         'comments_count',
+        'preferences',
     ];
 
     /**
@@ -81,6 +82,7 @@ class User extends Authenticatable
             'last_login_date' => 'date',
             'daily_cred_earned' => 'integer',
             'daily_cred_reset_date' => 'date',
+            'preferences' => 'array',
         ];
     }
 
@@ -153,6 +155,33 @@ class User extends Authenticatable
     public function snaccs(): HasMany
     {
         return $this->hasMany(Snacc::class);
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function blockedUsers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_blocks', 'user_id', 'blocked_user_id')
+            ->withTimestamps();
+    }
+
+    public function blockedByUsers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_blocks', 'blocked_user_id', 'user_id')
+            ->withTimestamps();
+    }
+
+    public function hasBlocked(User $user): bool
+    {
+        return $this->blockedUsers()->where('blocked_user_id', $user->id)->exists();
+    }
+
+    public function isBlockedBy(User $user): bool
+    {
+        return $this->blockedByUsers()->where('user_id', $user->id)->exists();
     }
 }
 

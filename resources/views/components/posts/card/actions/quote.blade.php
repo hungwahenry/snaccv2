@@ -11,6 +11,7 @@
         window.dispatchEvent(new CustomEvent('quote-snacc', {
             detail: {
                 slug: '{{ $snacc->slug }}',
+                is_ghost: {{ $snacc->is_ghost ? 'true' : 'false' }},
                 user: {
                     name: '{{ $snacc->user->profile->username }}',
                     username: '{{ $snacc->user->profile->username }}',

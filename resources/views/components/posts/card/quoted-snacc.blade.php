@@ -2,7 +2,7 @@
 
 @can('view', $snacc)
     <div 
-        class="relative block mt-3 border border-gray-200 dark:border-dark-border rounded-xl overflow-hidden hover:bg-gray-50 dark:hover:bg-dark-bg/50 transition-colors"
+        class="relative block mt-3 rounded-xl overflow-hidden hover:bg-gray-50 dark:hover:bg-dark-bg/50 transition-colors {{ $snacc->is_ghost ? 'border-2 border-dashed border-gray-300 dark:border-dark-border' : 'border border-gray-200 dark:border-dark-border' }}"
         @if($snacc->heat_tier)
             style="box-shadow: inset 4px 0 0 0 {{ $snacc->heat_tier->color }}, 0 4px 20px -5px {{ $snacc->heat_tier->color }}15;"
         @endif
@@ -21,16 +21,20 @@
         <div class="px-4 pt-3 relative pointer-events-none z-10">
             <!-- Header (scaled down) -->
             <div class="flex items-center gap-1.5 mb-1.5 text-xs pointer-events-auto">
-                <a href="{{ route('profile.show', $snacc->user->profile->username) }}" class="flex-shrink-0 relative z-10">
-                    <img
-                        src="{{ $snacc->user->profile->profile_photo ? Storage::url($snacc->user->profile->profile_photo) : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' . urlencode($snacc->user->profile->username) }}"
-                        alt="{{ $snacc->user->profile->username }}"
-                        class="w-5 h-5 rounded-full object-cover"
-                    >
-                </a>
-                <a href="{{ route('profile.show', $snacc->user->profile->username) }}" class="font-semibold text-gray-900 dark:text-white lowercase hover:underline relative z-10">
-                    {{ $snacc->user->profile->username }}
-                </a>
+                @if($snacc->is_ghost)
+                    <span class="font-semibold text-gray-900 dark:text-white lowercase">ghost snacc</span>
+                @else
+                    <a href="{{ route('profile.show', $snacc->user->profile->username) }}" class="flex-shrink-0 relative z-10">
+                        <img
+                            src="{{ $snacc->user->profile->profile_photo ? Storage::url($snacc->user->profile->profile_photo) : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' . urlencode($snacc->user->profile->username) }}"
+                            alt="{{ $snacc->user->profile->username }}"
+                            class="w-5 h-5 rounded-full object-cover"
+                        >
+                    </a>
+                    <a href="{{ route('profile.show', $snacc->user->profile->username) }}" class="font-semibold text-gray-900 dark:text-white lowercase hover:underline relative z-10">
+                        {{ $snacc->user->profile->username }}
+                    </a>
+                @endif
                 <span class="text-gray-400 dark:text-gray-500">·</span>
                 <span class="text-gray-500 dark:text-gray-400 lowercase">
                     {{ $snacc->university->acronym }}

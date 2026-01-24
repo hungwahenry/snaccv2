@@ -45,7 +45,7 @@ class OtpController extends Controller
         $request->session()->put('otp_email', $email);
 
         return redirect()->route('auth.verify.show')
-            ->with('status', 'We\'ve sent a 6-digit code to your email. Please check your inbox.');
+            ->with('success', 'we\'ve sent a 6-digit code to your email. please check your inbox.');
     }
 
     public function showVerifyForm(): View
@@ -127,6 +127,6 @@ class OtpController extends Controller
         // Send OTP email
         Mail::to($email)->send(new OtpMail($otp));
 
-        return back()->with('status', 'A new code has been sent to your email.');
+        return back()->with('success', 'a new code has been sent to your email.');
     }
 }

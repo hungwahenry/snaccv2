@@ -38,6 +38,7 @@ class ProfileController extends Controller
             ])
             ->withCount(['comments', 'likes'])
             ->notDeleted()
+            ->where('is_ghost', false)
             ->latest()
             ->paginate(10);
 

@@ -135,6 +135,20 @@ class Snacc extends Model
         return $query->where('visibility', 'global');
     }
 
+    public function scopeWithoutBlockedUsers($query)
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return $query;
+        }
+
+        $blockedIds = $user->blockedUsers()->pluck('users.id');
+        $blockedByIds = $user->blockedByUsers()->pluck('users.id');
+
+        return $query->whereNotIn('user_id', $blockedIds)
+                     ->whereNotIn('user_id', $blockedByIds);
+    }
+
     public function scopeSearch($query, string $searchTerm)
     {
         return $query->where(function ($q) use ($searchTerm) {

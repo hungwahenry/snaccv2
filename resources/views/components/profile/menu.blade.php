@@ -52,6 +52,26 @@
                 <x-solar-danger-triangle-linear class="w-5 h-5 flex-shrink-0 text-red-500" />
                 <span>report user</span>
             </button>
+
+            <!-- Block/Unblock -->
+            @if(auth()->user()->hasBlocked($user))
+                <form method="POST" action="{{ route('users.unblock', $user) }}" class="block">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="w-full px-4 py-2.5 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-dark-bg transition-colors flex items-center gap-2 lowercase">
+                        <x-solar-shield-user-linear class="w-5 h-5 flex-shrink-0" />
+                        <span>unblock user</span>
+                    </button>
+                </form>
+            @else
+                <form method="POST" action="{{ route('users.block', $user) }}" class="block">
+                    @csrf
+                    <button type="submit" class="w-full px-4 py-2.5 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-dark-bg transition-colors flex items-center gap-2 lowercase">
+                        <x-solar-forbidden-circle-linear class="w-5 h-5 flex-shrink-0 text-red-500" />
+                        <span>block user</span>
+                    </button>
+                </form>
+            @endif
         </div>
     </div>
 @endif

@@ -21,7 +21,15 @@ class SnaccPolicy
      */
     public function view(?User $user, Snacc $snacc): bool
     {
-        // Global snaccs can be viewed by anyone
+        // 1. Check Blocks (Authenticated Users)
+        if ($user) {
+            $author = $snacc->user;
+            if ($user->isBlockedBy($author) || $user->hasBlocked($author)) {
+                return false;
+            }
+        }
+
+        // 2. Visibility Checks
         if ($snacc->visibility === 'global') {
             return true;
         }

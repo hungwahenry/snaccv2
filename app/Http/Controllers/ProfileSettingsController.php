@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Requests\UpdateProfileSettingsRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileSettingsController extends Controller
 {
     /**
-     * Display the user's profile form.
+     * Display the user's profile settings form.
      */
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
+        return view('settings.profile', [
             'user' => $request->user(),
         ]);
     }
@@ -24,33 +23,29 @@ class ProfileSettingsController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    }
-
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
+    public function update(UpdateProfileSettingsRequest $request)
     {
         $user = $request->user();
+        $validated = $request->validated();
 
-        Auth::logout();
+        // Update Profile Photo
+        if ($request->hasFile('profile_photo')) {
+            // Delete old photo if exists
+            if ($user->profile->profile_photo) {
+                Storage::disk('public')->delete($user->profile->profile_photo);
+            }
 
-        $user->delete();
+            $path = $request->file('profile_photo')->store('profile-photos', 'public');
+            $user->profile->profile_photo = $path;
+        }
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        // Update Profile Fields
+        $user->profile->username = $validated['username'];
+        $user->profile->bio = $validated['bio'];
+        $user->profile->graduation_year = $validated['graduation_year'];
+        $user->profile->gender = $validated['gender'];
+        $user->profile->save();
 
-        return Redirect::to('/');
+        return back()->with('success', 'profile updated.');
     }
 }

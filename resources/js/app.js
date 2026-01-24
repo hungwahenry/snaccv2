@@ -11,6 +11,10 @@ import commentCard from './components/commentCard';
 import commentsList from './components/commentsList';
 import commentInput from './components/commentInput';
 import reportModal from './components/reportModal';
+import initTheme from './themeManager';
+
+// Initialize Theme Logic
+initTheme();
 
 window.Alpine = Alpine;
 
@@ -32,3 +36,4 @@ Alpine.store('gifPickerState', {
 });
 
 Alpine.start();
+

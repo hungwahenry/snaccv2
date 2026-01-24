@@ -10,6 +10,7 @@ use App\Services\HeatService;
 use App\Jobs\UpdateHeatScore;
 use App\Traits\RendersCommentHtml;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class SnaccViewController extends Controller
@@ -23,6 +24,8 @@ class SnaccViewController extends Controller
 
     public function show(Snacc $snacc): View
     {
+        Gate::authorize('view', $snacc);
+
         // Track unique view
         $this->viewService->recordView($snacc);
         UpdateHeatScore::dispatchAfterResponse($snacc);

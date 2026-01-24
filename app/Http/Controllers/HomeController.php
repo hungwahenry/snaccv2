@@ -27,7 +27,8 @@ class HomeController extends Controller
             'quotedSnacc.images'
         ])
         ->forUniversity($user->profile->university_id)
-        ->notDeleted();
+        ->notDeleted()
+        ->withoutBlockedUsers();
 
         // Sorting logic
         if ($sort === 'trending') {

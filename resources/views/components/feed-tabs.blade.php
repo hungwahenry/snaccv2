@@ -3,13 +3,16 @@
 <div x-data="{ 
         visible: true, 
         lastScroll: 0,
+        scrolled: false,
         init() {
             this.lastScroll = window.scrollY;
+            window.addEventListener('scroll', () => {
+                this.updateVisibility();
+                this.scrolled = (window.scrollY > 10);
+            });
         },
         updateVisibility() {
             const current = window.scrollY;
-            // Hide if scrolling down (>0) AND past 60px
-            // Show if scrolling up OR at top
             if (current > this.lastScroll && current > 60) {
                 this.visible = false;
             } else {
@@ -18,10 +21,12 @@
             this.lastScroll = current;
         }
      }"
-     @scroll.window.passive="updateVisibility()"
-     :class="visible ? 'translate-y-0' : '-translate-y-full'"
+     :class="[
+        visible ? 'translate-y-0' : '-translate-y-full',
+        scrolled ? 'bg-white/80 dark:bg-dark-bg/80 backdrop-blur-md border-b border-gray-200 dark:border-dark-border' : 'bg-transparent border-transparent'
+     ]"
      id="feed-tabs" 
-     class="flex items-center gap-6 px-4 py-3 border-b border-gray-200 dark:border-dark-border sticky top-14 lg:top-0 bg-white/80 dark:bg-dark-bg/80 backdrop-blur-md z-30 transition-transform duration-300 transform">
+     class="flex items-center gap-6 px-4 py-3 sticky top-14 lg:top-0 z-30 transition-all duration-300 transform">
     
     <!-- Trending Tab -->
     <a href="{{ route($route, ['sort' => 'trending']) }}" 

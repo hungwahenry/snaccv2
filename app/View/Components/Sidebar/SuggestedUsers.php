@@ -28,13 +28,19 @@ class SuggestedUsers extends Component
         $suggestedUsers = collect();
 
         if ($user && $user->profile) {
-            // Suggest users from same uni, high cred, not already added
+            // Suggest users from same uni, high cred, not already added, not blocked
             $users = User::whereHas('profile', function ($q) use ($user) {
                     $q->where('university_id', $user->profile->university_id)
                       ->where('user_id', '!=', $user->id);
                 })
                 ->whereDoesntHave('addedByUsers', function ($q) use ($user) {
                     $q->where('user_id', $user->id);
+                })
+                ->whereDoesntHave('blockedByUsers', function ($q) use ($user) {
+                    $q->where('user_id', $user->id);
+                })
+                ->whereDoesntHave('blockedUsers', function ($q) use ($user) {
+                    $q->where('blocked_user_id', $user->id);
                 })
                 ->orderByDesc('cred_score')
                 ->take(5)

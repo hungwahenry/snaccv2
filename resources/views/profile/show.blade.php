@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout transparent-header="true">
     <div>
         <!-- Profile Header -->
         <x-profile.header 

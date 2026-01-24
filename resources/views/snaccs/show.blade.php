@@ -1,4 +1,9 @@
-<x-app-layout>
+@php
+    $pageTitle = $snacc->is_ghost ? 'Ghost Snacc' : 'Snacc by ' . $snacc->user->profile->username;
+    $pageDescription = Str::limit($snacc->content, 150);
+@endphp
+
+<x-app-layout :title="$pageTitle" :description="$pageDescription">
     <div class="pb-24"
          x-data="commentsList(
              {{ Js::from($comments->items()) }},

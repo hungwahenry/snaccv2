@@ -14,13 +14,17 @@ class UserPolicy
         return true;
     }
 
-    /**
-     * Determine whether the user can view the profile.
-     */
     public function view(?User $currentUser, User $targetUser): bool
     {
-        // Profiles are viewable by authenticated users only
-        return $currentUser !== null;
+        // Public profiles are viewable by everyone, BUT we must check blocks if authenticated
+        if ($currentUser) {
+            // If I am blocked by them OR I blocked them -> Deny
+            if ($currentUser->isBlockedBy($targetUser) || $currentUser->hasBlocked($targetUser)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 

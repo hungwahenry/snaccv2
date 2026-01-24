@@ -65,8 +65,9 @@ class CommentService
     public function getCommentsForSnacc(Snacc $snacc, int $perPage = 10)
     {
         return $snacc->comments()
+            ->withoutBlockedUsers()
             ->with(['user.profile', 'repliedToUser.profile'])
-            ->withCount('replies') // Only get the count, not the actual replies
+            ->withCount('replies')
             ->whereNull('parent_comment_id')
             ->orderByDesc('likes_count')
             ->orderByDesc('created_at')
@@ -79,6 +80,7 @@ class CommentService
     public function getRepliesForComment(Comment $comment, int $perPage = 10)
     {
         return $comment->replies()
+            ->withoutBlockedUsers()
             ->with(['user.profile', 'repliedToUser.profile'])
             ->orderBy('created_at', 'asc')
             ->paginate($perPage);

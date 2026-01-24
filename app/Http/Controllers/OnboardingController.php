@@ -33,6 +33,6 @@ class OnboardingController extends Controller
 
         Profile::create($validated);
 
-        return redirect()->route('home')->with('status', 'Welcome to SNACC! Your profile has been created.');
+        return redirect()->route('home')->with('success', 'welcome to snacc! your profile has been created.');
     }
 }
